@@ -21,18 +21,19 @@ class CardView: UIView {
     //        }
     //    }
     
+    //id value of each CardView
     static var identifier = 0
-    
+    //the shape of each card
     public var shape: Card.Shapes? = nil
+    //color of card
     var color: UIColor? = nil
+    //number of shapes of each card
     var numberOfShapes = 0
+    //alpha value of each card
     var shadingAlpha: CGFloat = 0.0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        //        viewFrame = frame
-        CardView.identifierFactory()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -40,6 +41,8 @@ class CardView: UIView {
         fatalError("init(coder:) has not been implemented")
         
     }
+    
+    //creates an id value for CardView    
     static func identifierFactory() {
         self.identifier += 1
     }
@@ -49,32 +52,38 @@ class CardView: UIView {
     
     override func draw(_ rect: CGRect) {
         
+        //variable for the shape that's to be drawn
         var path: UIBezierPath? = nil
-        var xPositionOfOval = self.frame.width / 2,
-            ovalSize = self.frame.height * 0.30
         
+        //the 'x' position of the Oval shape
+        var xPositionOfOval = self.frame.width / 2,
+            ovalSize = self.frame.height * 0.30 //size of Oval. the size of oval changes as more than one is added
+        
+        //start positions of 'x' and 'y' of the Diamond shape to be drawn
         var diamondStartX = centerOffsetX,
             diamondStartY = quarterOffsetY,
-            lineLengthOfDiamond:CGFloat = bounds.size.width * 0.125
+            lineLengthOfDiamond:CGFloat = bounds.size.width * 0.125 //length of the lines of the Diamond
         
-        var controlPointLength: CGFloat = bounds.size.width * 0.5
-        
+        //squiggle Start and End points
         var squiggleStartPoints = CGPoint(x: thirdOffsetX, y: quarterOffsetY),
-        squiggleEndPoints = CGPoint(x: thirdOffsetX * 2, y: quarterOffsetY * 3)
-        
+            squiggleEndPoints = CGPoint(x: thirdOffsetX * 2, y: quarterOffsetY * 3),
+            controlPointLength: CGFloat = bounds.size.width * 0.5 //squiggle control point length
+
         let shapeSpacing: CGFloat = bounds.size.width * 0.33
         
+        //if number of shapes is 2 or three, move the 'x' positions to the left to make room for the other shapes to draw
         if numberOfShapes == 2 {
             xPositionOfOval = thirdOffsetX
             ovalSize /= 2
             
             diamondStartX = thirdOffsetX
+            
             squiggleStartPoints.x = quarterOffsetX
             squiggleEndPoints.x *= 0.75
         }
         else if numberOfShapes == 3 {
             xPositionOfOval = xPositionOfOval / 3
-            ovalSize *= 0.50
+            ovalSize *= 0.50 //change the oval shape to half the size
             
             diamondStartX = thirdOffsetX / 2
             
@@ -82,6 +91,8 @@ class CardView: UIView {
             squiggleEndPoints.x = -quarterOffsetY + controlPointLength
             
         }
+        
+        //draw the shape up to the numberOfShapes, either 1, 2, or 3 shapes.
         for index in 1...numberOfShapes {
             switch shape {
             case .Squiggle?:
@@ -117,11 +128,17 @@ class CardView: UIView {
                 break
                 
             }
+            
+            //set color
             color?.setFill()
             color?.setStroke()
             
+            
+            //fill the shape with alpha value of 0, .5, or 1
             path?.fill(with: .normal, alpha: shadingAlpha)
-            path?.stroke(with: .normal, alpha: 1)
+            
+            //stroke shape
+            path?.stroke()
         }
     }
     
