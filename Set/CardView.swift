@@ -56,8 +56,8 @@ class CardView: UIView {
         var path: UIBezierPath? = nil
         
         //the 'x' position of the Oval shape
-        var xPositionOfOval = self.frame.width / 2,
-            ovalSize = self.frame.height * 0.30 //size of Oval. the size of oval changes as more than one is added
+        var xPositionOfOval = bounds.size.width / 2,
+            ovalSize = bounds.size.height * 0.30 //size of Oval. the size of oval changes as more than one is added
         
         //start positions of 'x' and 'y' of the Diamond shape to be drawn
         var diamondStartX = centerOffsetX,
@@ -66,8 +66,8 @@ class CardView: UIView {
         
         //squiggle Start and End points
         var squiggleStartPoints = CGPoint(x: thirdOffsetX, y: quarterOffsetY),
-            squiggleEndPoints = CGPoint(x: thirdOffsetX * 2, y: quarterOffsetY * 3),
-            controlPointLength: CGFloat = bounds.size.width * 0.5 //squiggle control point length
+            squiggleEndPoints = CGPoint(x: thirdOffsetX * 1.5, y: quarterOffsetY * 3),
+            controlPointLength: CGFloat = 75 //squiggle control point length
 
         let shapeSpacing: CGFloat = bounds.size.width * 0.33
         
@@ -87,8 +87,8 @@ class CardView: UIView {
             
             diamondStartX = thirdOffsetX / 2
             
-            squiggleStartPoints.x *= 0.125
-            squiggleEndPoints.x = -quarterOffsetY + controlPointLength
+            squiggleStartPoints.x = thirdOffsetX / 3
+            squiggleEndPoints.x = thirdOffsetX / 1.5
             
         }
         
