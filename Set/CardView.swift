@@ -9,18 +9,7 @@
 import UIKit
 
 class CardView: UIView {
-    //
-    //    var width:CGFloat = 0 { didSet { setNeedsDisplay(); setNeedsLayout()}}
-    //    var height:CGFloat = 0{ didSet { setNeedsDisplay(); setNeedsLayout()}}
-    
-    //    public var viewFrame = CGRect(x: 0, y: 0, width: 0, height: 0){
-    //
-    //        didSet{
-    //            self.frame = viewFrame
-    //            setNeedsDisplay()
-    //        }
-    //    }
-    
+
     //id value of each CardView
     static var identifier = 0
     //the shape of each card
@@ -37,9 +26,7 @@ class CardView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        
         fatalError("init(coder:) has not been implemented")
-        
     }
     
     //creates an id value for CardView    
@@ -89,15 +76,14 @@ class CardView: UIView {
             
             squiggleStartPoints.x = thirdOffsetX / 3
             squiggleEndPoints.x = thirdOffsetX / 1.5
-            
         }
         
         //draw the shape up to the numberOfShapes, either 1, 2, or 3 shapes.
-        for index in 1...numberOfShapes {
+        for _ in 1...numberOfShapes {
             switch shape {
             case .Squiggle?:
-                var controlPoint1 = CGPoint(x: squiggleStartPoints.x + controlPointLength, y: quarterOffsetY)
-                var controlPoint2 = CGPoint(x: squiggleEndPoints.x - controlPointLength, y: quarterOffsetY * 3)
+                let controlPoint1 = CGPoint(x: squiggleStartPoints.x + controlPointLength, y: quarterOffsetY)
+                let controlPoint2 = CGPoint(x: squiggleEndPoints.x - controlPointLength, y: quarterOffsetY * 3)
                 
                 path = UIBezierPath()
                 path?.move(to: squiggleStartPoints)
@@ -122,17 +108,14 @@ class CardView: UIView {
                 path = UIBezierPath(arcCenter: CGPoint(x: xPositionOfOval, y: centerOffsetY), radius: ovalSize, startAngle: 0, endAngle: 2*CGFloat.pi, clockwise: true)
                 
                 xPositionOfOval += shapeSpacing
-                
                 break
             default:
                 break
-                
             }
             
             //set color
             color?.setFill()
             color?.setStroke()
-            
             
             //fill the shape with alpha value of 0, .5, or 1
             path?.fill(with: .normal, alpha: shadingAlpha)
@@ -141,7 +124,6 @@ class CardView: UIView {
             path?.stroke()
         }
     }
-    
     public func setColor(color: UIColor){
         self.color = color
     }
@@ -156,14 +138,6 @@ extension CardView {
         static let thirdOffsetToBoundsWidth: CGFloat = 0.33
         static let centerOffsetToBoundsHeight: CGFloat = 0.50
         static let centerOffsetToBoundsWidth: CGFloat = 0.50
-        
-    }
-    private struct Diamond {
-        
-        static let xOffsetRatio: CGFloat = 0.50
-        static let yOffsetRatio: CGFloat = 0.25
-        static var lineLengthOfDiamond:CGFloat = 15
-        
     }
     private var quarterOffsetX: CGFloat {
         return bounds.size.width * SizeRatio.quarterOffsetToBoundsWidth
