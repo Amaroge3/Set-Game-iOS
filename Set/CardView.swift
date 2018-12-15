@@ -10,8 +10,6 @@ import UIKit
 
 class CardView: UIView {
 
-    //id value of each CardView
-    static var identifier = 0
     //the shape of each card
     public var shape: Card.Shapes? = nil
     //color of card
@@ -21,22 +19,26 @@ class CardView: UIView {
     //alpha value of each card
     var shadingAlpha: CGFloat = 0.0
     
+    
+    static var identifierFactory = 0
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
+
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)!
+
     }
     
-    //creates an id value for CardView    
-    static func identifierFactory() {
-        self.identifier += 1
+    //creates an id value for CardView
+    static func createUniqueIdentifier() -> Int {
+        identifierFactory += 1
+        return CardView.identifierFactory
     }
-    static func getIdentifier() -> Int {
-        return CardView.identifier
-    }
-    
+  
     override func draw(_ rect: CGRect) {
         
         //variable for the shape that's to be drawn
@@ -53,7 +55,7 @@ class CardView: UIView {
         
         //squiggle Start and End points
         var squiggleStartPoints = CGPoint(x: thirdOffsetX, y: quarterOffsetY),
-            squiggleEndPoints = CGPoint(x: thirdOffsetX * 1.5, y: quarterOffsetY * 3),
+            squiggleEndPoints = CGPoint(x: thirdOffsetX + quarterOffsetX, y: quarterOffsetY * 3),
             controlPointLength: CGFloat = 75 //squiggle control point length
 
         let shapeSpacing: CGFloat = bounds.size.width * 0.33
@@ -66,7 +68,7 @@ class CardView: UIView {
             diamondStartX = thirdOffsetX
             
             squiggleStartPoints.x = quarterOffsetX
-            squiggleEndPoints.x *= 0.75
+            squiggleEndPoints.x = squiggleStartPoints.x + quarterOffsetX
         }
         else if numberOfShapes == 3 {
             xPositionOfOval = xPositionOfOval / 3
@@ -74,8 +76,8 @@ class CardView: UIView {
             
             diamondStartX = thirdOffsetX / 2
             
-            squiggleStartPoints.x = thirdOffsetX / 3
-            squiggleEndPoints.x = thirdOffsetX / 1.5
+            squiggleStartPoints.x = thirdOffsetX / 6
+            squiggleEndPoints.x = squiggleStartPoints.x + quarterOffsetX
         }
         
         //draw the shape up to the numberOfShapes, either 1, 2, or 3 shapes.
