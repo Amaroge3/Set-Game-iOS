@@ -246,7 +246,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     selectedCards.append(card)
                     card.isSelected = true
                     card.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-                }                
+                }
             }
         }
     }
@@ -332,6 +332,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             //grab three cards and add them to screen
             for _ in 1...3 {
+                var currentCardCount = cardViewsOnScreen.count
                                 //remove card from the array that contains cards not on screen yet
                 let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
                 
