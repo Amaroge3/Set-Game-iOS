@@ -15,7 +15,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             addThreeCardsButton.layer.cornerRadius = 5
             addThreeCardsButton.setNeedsDisplay()
             addThreeCardsButton.setNeedsLayout()
-            
         }
     }
     //view that holds cards
@@ -29,7 +28,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     //initializes the set class with the maximum number of cards in the game of set with maxCardButtonCount
     lazy var game = Set(numberOfCards: maxCardCount)
-    var cardButtons = [UIButton]()
     //initial number of buttons in the UI
     var initialCardCount = 12
     //maximum number of cards in the game
@@ -209,10 +207,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             if index > 1, index % 3 == 0 {
                 colorCounter += 1
             }
-            if numberOfShapesCounter > 2 { numberOfShapesCounter = 0 }
-            if colorCounter > 2 { colorCounter = 0}
-            if shapeCounter > 2 { shapeCounter = 0 }
-            if shadingCounter > 2 { shadingCounter = 0 }
+            if numberOfShapesCounter == tempNumberOfShapes.count { numberOfShapesCounter = 0 }
+            if colorCounter == tempShapeColor.count { colorCounter = 0}
+            if shapeCounter == tempShape.count { shapeCounter = 0 }
+            if shadingCounter == tempShading.count { shadingCounter = 0 }
             
             game.cards[index].shape = tempShape[shapeCounter]
             game.cards[index].numberOfShapes = tempNumberOfShapes[numberOfShapesCounter]
@@ -296,7 +294,5 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             y: viewForAllCards.bounds.minY,
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
-        
     }
-
 }
