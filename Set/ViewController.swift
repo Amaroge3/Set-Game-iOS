@@ -47,7 +47,8 @@ class ViewController: UIViewController {
     let numberOfCardsPerRow = 3
     override func viewDidLayoutSubviews() {
         
-        updateGridAndCardViews()
+        updateGridForMoreCardsToBeAddedOnScreen()
+        redrawCardViews()
         
     }
     override func viewDidLoad() {
@@ -141,11 +142,11 @@ class ViewController: UIViewController {
             var cardFromModel = game.cards[index]
             var card = CardView()
             if index < initialCardCount {
-//            card = CardView(frame: CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height))
-           card.frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
+                //            card = CardView(frame: CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height))
+                card.frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
             }
-           
-                card.shape = cardFromModel.shape
+            
+            card.shape = cardFromModel.shape
             card.setColor(color: game.cards[index].shapeColor)
             
             switch cardFromModel.numberOfShapes {
@@ -177,7 +178,6 @@ class ViewController: UIViewController {
             card.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             card.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             card.tag = CardView.createUniqueIdentifier()
-            allCardViewsAvailableAndNotOnScreen.append(card)
             
             if index < initialCardCount {
                 cardViewsOnScreen.append(card)
@@ -309,21 +309,31 @@ class ViewController: UIViewController {
     //adds three more cards to the UI with the Add Three More cards button
     @IBAction func addThreeMoreCards(_ sender: UIButton) {
         
-        numberOfRows += 1
-        updateGridAndCardViews()
-//        for _ in 1...3 {
-//            if currentCardCount > initialCardCount{
-//                let randomInteger = Int.random(in: 12..<cardButtons.count)
-//                let button = cardButtons.remove(at: randomInteger)
-//                print(button.tag)
-//                view.addSubview(button)
-//                currentCardCount -= 1
-//            }
-//            else{
-//                sender.isEnabled = false
-//                sender.alpha = 0.10
-//            }
-//        }
+        if allCardViewsAvailableAndNotOnScreen.count >= 3 {
+            //increase the number of rows for the grid
+            numberOfRows += 1
+            //update the grid to add more cards to the screen
+            updateGridForMoreCardsToBeAddedOnScreen()
+            
+            //grab three cards and add them to screen
+            for _ in 1...3 {
+                
+                currentCardCount = cardViewsOnScreen.count
+                //remove card from the array that contains cards not on screen yet
+                let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
+                
+                card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
+                
+                cardViewsOnScreen.append(card)
+                viewForAllCards.addSubview(card)
+            }
+        }
+        else {
+            sender.isEnabled = false
+            sender.alpha = 0.10
+        }
+        //redraw all the subviews on the screen because the frame of the views has changed
+        redrawCardViews()
     }
     
     //    //a reusable function to find the area where a button does not overlap another one before it is viewed in the UI
@@ -363,7 +373,7 @@ class ViewController: UIViewController {
         }
     }
     
-    private func updateGridAndCardViews(){
+    private func updateGridForMoreCardsToBeAddedOnScreen(){
         grid = Grid(layout: Grid.Layout.dimensions(rowCount: numberOfRows, columnCount: numberOfCardsPerRow))
         
         grid.frame = CGRect(
@@ -371,12 +381,16 @@ class ViewController: UIViewController {
             y: viewForAllCards.bounds.minY,
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
+        
+        
+    }
+    
+    private func redrawCardViews() {
         for index in 0..<cardViewsOnScreen.count{
             cardViewsOnScreen[index].frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
             cardViewsOnScreen[index].setNeedsDisplay()
             cardViewsOnScreen[index].setNeedsLayout()
         }
-        
     }
     
     //get the NSAttributed String for the card
