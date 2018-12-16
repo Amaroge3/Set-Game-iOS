@@ -20,12 +20,12 @@ class Set {
             let card = Card()
             cards.append(card)
         }
-        shuffle()
+//        shuffle()
         
     }
     
     //shuffle cards
-    private func shuffle(){
+    public func shuffle(){
         for index in 0..<cards.count {
             let randomIndex = Int(arc4random_uniform(UInt32(cards.count)))
             let tempArrayValueForSwitch = cards[index]
@@ -48,6 +48,8 @@ class Set {
             if card.shapeColor.isEqual(nextCard.shapeColor)  { sameColorCount += 1 }
             if card.shading == nextCard.shading { sameShadingCount += 1 }
             if card.numberOfShapes == nextCard.numberOfShapes { sameNumberOfShapesCount += 1 }
+            
+            
         }
         
         if sameShapeCount == 1 || sameColorCount == 1 ||
@@ -61,13 +63,11 @@ class Set {
     public func getColorOfCard(buttonTag tag: Int) -> UIColor {
         return cards[tag].shapeColor
     }
-    public func getShapeOfCard(buttonTag tag: Int) -> String {
-        return cards[tag].shape
-    }
-    public func getShadingOfCard(buttonTag tag: Int) -> String {
+
+    public func getShadingOfCard(buttonTag tag: Int) -> Card.Shading {
         return cards[tag].shading
     }
-    public func getNumberOfShapesOfCard(buttonTag tag: Int) -> Int {
+    public func getNumberOfShapesOfCard(buttonTag tag: Int) -> Card.NumberOfShapes {
         return cards[tag].numberOfShapes
     }
     public func getCardIdentifier(buttonTag index: Int) -> Int {
