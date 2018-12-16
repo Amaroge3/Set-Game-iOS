@@ -50,8 +50,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setGameCards()
-        //        loadCards()
-        //
         
         for index in 0..<game.cards.count {
             let card = game.cards[index]
@@ -59,62 +57,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         print(game.cards.count)
         
-        //        var card = CardView()
-        //        card.layer.borderWidth = 2
-        //        card.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        //        grid = Grid(layout: Grid.Layout.dimensions(rowCount: 1, columnCount: 1))
-        //        grid.frame = CGRect(x: self.view.bounds.minX + 16, y: self.view.bounds.minY + 50, width: self.view.bounds.width - 32, height: self.view.bounds.height - 100)
-        ////        grid.aspectRatio = 20
-        //        card.frame = CGRect(x: (grid[0]?.minX)!, y: (grid[0]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        //        card.layer.cornerRadius = 2
-        //         grid = Grid(layout: Grid.Layout.dimensions(rowCount: 1, columnCount: 3))
-        //        grid.frame = CGRect(x: self.view.bounds.minX + 16, y: self.view.bounds.minY + 50, width: self.view.bounds.width - 32, height: self.view.bounds.height - 100)
-        //        card.frame = CGRect(x: (grid[0]?.minX)!, y: (grid[0]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        //
-        //        var card2 = CardView()
-        //        card2.layer.borderWidth = 2
-        //        card2.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        ////        card.frame = CGRect(x: (grid[0]?.minX)!, y: (grid[0]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        //
-        //        card2.frame = CGRect(x: (grid[1]?.minX)!, y: (grid[1]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        ////        card.setNeedsDisplay()
-        ////        card.setNeedsLayout()
-        //
-        //        var card3 = CardView()
-        //
-        //        card3.frame = CGRect(x: (grid[2]?.minX)!, y: (grid[2]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        //        card3.sizeToFit()
-        //
-        //        card3.layer.borderWidth = 2
-        //        card3.layer.borderColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        //
-        //        grid = Grid(layout: Grid.Layout.dimensions(rowCount: 2, columnCount: 3))
-        //        grid.frame = CGRect(x: self.view.bounds.minX + 16, y: self.view.bounds.minY + 50, width: self.view.bounds.width - 32, height: self.view.bounds.height - 100)
-        //        card3.frame = CGRect(x: (grid[2]?.minX)!, y: (grid[2]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        //
-        //        var card4 = CardView()
-        //        card4.sizeToFit()
-        //        card4.frame = CGRect(x: (grid[3]?.minX)!, y: (grid[3]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-        //
-        //        view.addSubview(card)
-        //        view.addSubview(card2)
-        //        view.addSubview(card3)
-        //        view.addSubview(card4)
-        //print(grid.cellCount)
-        
-        //        card2.setNeedsDisplay()
-        //        card2.setNeedsLayout()
-        //        viewForAllCards.layoutIfNeeded()
-        //viewForAllCards.updateConstraintsIfNeeded()
-        //
-        //        addThreeCardsButton.setNeedsDisplay()
-        //        addThreeCardsButton.updateConstraintsIfNeeded()
-        
-        
-        
-        
-        //        viewForAllCards.setNeedsUpdateConstraints()
-        //        viewForAllCards.setNeedsDisplay()
     }
     override func viewDidAppear(_ animated: Bool) {
         loadCardViews()
@@ -250,46 +192,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-    
-    
-    //loads the buttons in the UI
-    private func loadCards(){
-        
-        //        for index in 0...maxNumberOfButtonsOnView{
-        //
-        //            let button = UIButton(type: .roundedRect)
-        //            button.tag = game.cards[index].identifier
-        //            print(game.cards[index].identifier)
-        //            var buttonCoordinate = CGPoint()
-        //            if cardButtons.count > 0 {
-        //                buttonCoordinate = getCoordinateWhereButtonDoesNotOverlap(this: button)
-        //            }
-        //            else {
-        //                buttonCoordinate = Coordinates().randomCoordinatesWithinBoundsOfView(of: self.view.frame.maxX, and: self.view.frame.maxY, of: Int(buttonSize.width), and: Int(buttonSize.height))
-        //            }
-        //
-        //            //button properties settings
-        //            button.frame = CGRect(
-        //                x: buttonCoordinate.x,
-        //                y: buttonCoordinate.y,
-        //                width: buttonSize.width,
-        //                height: buttonSize.height)
-        //            let buttonTitle = getNSAttributedString(cardAt: index)
-        //            button.setAttributedTitle(buttonTitle, for: .normal)
-        //            button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
-        //            button.addTarget(self, action:#selector(self.touchCard(_:)), for: .touchUpInside)
-        //            button.layer.borderWidth = 2; button.layer.cornerRadius = 5; button.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        //
-        //            //add button to the setCards array
-        //            cardButtons.append(button)
-        //            //increment button count as more are added
-        //            currentButtonCount += 1
-        //            //add initial buttons to the view. Initial button count is 12
-        //            if index < initialButtonCount {
-        //                view.addSubview(button)
-        //            }
-        //        }
-    }
     //set the game cards
     private func setGameCards(){
         
@@ -350,35 +252,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         redrawCardViews()
     }
     
-    //    //a reusable function to find the area where a button does not overlap another one before it is viewed in the UI
-    //    private func getCoordinateWhereButtonDoesNotOverlap(this button: UIButton) -> CGPoint{
-    //        //inner function for checking if UI button overlaps
-    //        func doesButtonOverlapOnAnyButtonInUI() -> Bool{
-    //            for index in 0..<cardButtons.count {
-    //                let buttonInView = cardButtons[index]
-    //                if button.frame.intersects(buttonInView.frame){
-    //                    return true
-    //                }
-    //            }
-    //            return false
-    //        }
-    //        var buttonOverlaps = true
-    //        var buttonCoordinate = CGPoint()
-    //
-    //        while(buttonOverlaps == true){
-    //            buttonCoordinate = Coordinates().randomCoordinatesWithinBoundsOfView(
-    //                of: self.view.frame.maxX,
-    //                and: self.view.frame.maxY,
-    //                of: Int(buttonSize.width),
-    //                and: Int(buttonSize.height))
-    //            button.frame = CGRect(x: buttonCoordinate.x,
-    //                                  y: buttonCoordinate.y,
-    //                                  width: buttonSize.width,
-    //                                  height: buttonSize.height)
-    //            buttonOverlaps = doesButtonOverlapOnAnyButtonInUI()
-    //        }
-    //        return buttonCoordinate
-    //    }
     //a reusable function to deselect the selected buttons
     private func deselectSelectedButtons(){
         for index in 0..<selectedCards.count {
@@ -425,13 +298,5 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             height: viewForAllCards.bounds.height)
         
     }
-    //get the NSAttributed String for the card
-    //    private func getNSAttributedString(cardAt index: Int ) -> NSAttributedString {
-    //        let card = game.cards[index]
-    //        let shapeNSattString = card.shape
-    //        let attributesOfNSSattString: [NSAttributedString.Key: Any] = [
-    //            .foregroundColor: game.cards[index].shapeColor]
-    //        let attributedStringOfCard = NSAttributedString(string: shapeNSattString, attributes: attributesOfNSSattString)
-    //        return attributedStringOfCard
-    //    }
+
 }
