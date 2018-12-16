@@ -11,28 +11,28 @@ import UIKit
 struct Card {
     
     var identifier = 0
-    var shape = ""
-    var numberOfShapes = 0
-    var shading = ""
+    var shape: Shapes = Shapes.Squiggle
+    var numberOfShapes = NumberOfShapes.One
+    var shading = Shading.Solid
     var shapeColor = UIColor()
     var isSelected = false
     
     
     static var identifierFactory = 0
     
-    enum Shapes: String {
-        case Squiggle = "■"
-        case Diamond = "▲"
-        case Oval = "●"
+    enum Shapes {
+        case Squiggle
+        case Diamond
+        case Oval
         
         static var all = [Shapes.Squiggle, .Diamond, .Oval]
     }
-    enum Number: Int {
-        case One = 1
-        case Two = 2
-        case Three = 3
+    enum NumberOfShapes {
+        case One
+        case Two
+        case Three
         
-        static var all = [Number.One, .Two, .Three]
+        static var all = [NumberOfShapes.One, .Two, .Three]
     }
     enum Color {
         case Red
@@ -42,10 +42,10 @@ struct Card {
         static var all = [Color.Red, .Green, .Purple]
     }
     
-    enum Shading: String {
-        case Solid = "Solid"
-        case Striped = "Striped"
-        case Open = "Open"
+    enum Shading {
+        case Solid
+        case Striped
+        case Open
         
         static var all = [Shading.Solid, .Striped, .Open]
     }
