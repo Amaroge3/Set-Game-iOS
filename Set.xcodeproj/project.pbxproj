@@ -17,6 +17,8 @@
 		DB4BE4432198339300047B1C /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4BE4422198339300047B1C /* Coordinates.swift */; };
 		DB7367152191A79B00EF99B0 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7367142191A79B00EF99B0 /* Card.swift */; };
 		DB7367172191A9AF00EF99B0 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7367162191A9AF00EF99B0 /* Set.swift */; };
+		DBEAA30C21B20CD8001EE2C8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEAA30B21B20CD8001EE2C8 /* CardView.swift */; };
+		DBEAA31021B20FEA001EE2C8 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEAA30F21B20FEA001EE2C8 /* Grid.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		DB4BE4422198339300047B1C /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
 		DB7367142191A79B00EF99B0 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		DB7367162191A9AF00EF99B0 /* Set.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
+		DBEAA30B21B20CD8001EE2C8 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		DBEAA30F21B20FEA001EE2C8 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Grid.swift; path = ../../../Downloads/Grid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +112,9 @@
 				DB7367162191A9AF00EF99B0 /* Set.swift */,
 				DB1AAFD52190F44C00255059 /* AppDelegate.swift */,
 				DB1AAFD72190F44C00255059 /* ViewController.swift */,
+				DBEAA30F21B20FEA001EE2C8 /* Grid.swift */,
 				DB1AAFD92190F44C00255059 /* Main.storyboard */,
+				DBEAA30B21B20CD8001EE2C8 /* CardView.swift */,
 				DB1AAFDC2190F44E00255059 /* Assets.xcassets */,
 				DB1AAFDE2190F44E00255059 /* LaunchScreen.storyboard */,
 				DB1AAFE12190F44E00255059 /* Info.plist */,
@@ -269,6 +275,8 @@
 				DB7367152191A79B00EF99B0 /* Card.swift in Sources */,
 				DB7367172191A9AF00EF99B0 /* Set.swift in Sources */,
 				DB1AAFD62190F44C00255059 /* AppDelegate.swift in Sources */,
+				DBEAA30C21B20CD8001EE2C8 /* CardView.swift in Sources */,
+				DBEAA31021B20FEA001EE2C8 /* Grid.swift in Sources */,
 				DB4BE4432198339300047B1C /* Coordinates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
