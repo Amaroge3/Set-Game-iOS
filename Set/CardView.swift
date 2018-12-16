@@ -18,6 +18,7 @@ class CardView: UIView {
     var numberOfShapes = 0
     //alpha value of each card
     var shadingAlpha: CGFloat = 0.0
+    var isSelected = false
     
     
     static var identifierFactory = 0
