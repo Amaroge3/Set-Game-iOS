@@ -32,11 +32,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var cardButtons = [UIButton]()
     //initial number of buttons in the UI
     var initialCardCount = 12
-    var currentCardCount = 0
     //maximum number of cards in the game
     var maxCardCount = 81
-    //maximum number of cards in the view at a time
-    let maxNumberOfButtonsOnView = 24
     //button size
     //selected buttons array
     lazy var selectedCards = [CardView]()
@@ -45,11 +42,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var numberOfRows = 4
     let numberOfCardsPerRow = 3
+    
     override func viewDidLayoutSubviews() {
-        
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
-        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,7 +118,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     override func viewDidAppear(_ animated: Bool) {
         loadCardViews()
-        
     }
     
     
@@ -241,7 +236,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         reformCards()
                         redrawCardViews()
                     }
-                    
                 }
                 
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
@@ -252,9 +246,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     selectedCards.append(card)
                     card.isSelected = true
                     card.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-                }
-                
-                print("x: \(card.frame.minX), y: \(card.frame.minX)")
+                }                
             }
         }
     }
@@ -340,9 +332,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             //grab three cards and add them to screen
             for _ in 1...3 {
-                
-                currentCardCount = cardViewsOnScreen.count
-                //remove card from the array that contains cards not on screen yet
+                                //remove card from the array that contains cards not on screen yet
                 let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
                 
                 card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
