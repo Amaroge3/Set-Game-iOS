@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var addThreeCardsButton: UIButton! {
         didSet {
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     let maxNumberOfButtonsOnView = 24
     //button size
     //selected buttons array
-    lazy var selectedButtons = [UIButton]()
+    lazy var selectedCards = [CardView]()
     var allCardViewsAvailableAndNotOnScreen = [CardView]()
     var cardViewsOnScreen = [CardView]()
     
@@ -191,52 +191,62 @@ class ViewController: UIViewController {
         
     }
     //when the user touches a card on the UI
-    @IBAction func touchCard(_ sender: UIButton) {
-        //        var cardsMatch = false
-        //
-        //        //select and deselect button
-        //        if selectedButtons.count < 3 {
-        //            //if the button is not selected, select the button
-        //            if sender.isSelected == false {
-        //                sender.isSelected = true
-        //                sender.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-        //                selectedButtons.append(sender)
-        //            }
-        //                //if the button is selected, deselect the button
-        //            else {
-        //                sender.isSelected = false
-        //                sender.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        //                selectedButtons.removeLast()
-        //            }
-        //        }
-        //        //when the number of buttons in the array is equal to 3, check if cards match
-        //        if selectedButtons.count == 3{
-        //            var cardsFromModel = [Card]()
-        //            for index in 0..<selectedButtons.count {
-        //                let nextCard = selectedButtons[index]
-        //                cardsFromModel.append(game.cards[nextCard.tag - 1])
-        //            }
-        //            cardsMatch = game.isSelectionASet(cardsSelected: cardsFromModel)
-        //        }
-        //        //if cards do match, then remove the cards from view
-        //        if cardsMatch {
-        //            deselectSelectedButtons()
-        //            for index in 0..<selectedButtons.count {
-        //                let nextCard = selectedButtons[index]
-        //                nextCard.removeFromSuperview()
-        //            }
-        //            selectedButtons.removeAll()
-        //        }
-        //
-        //        //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
-        //        //previously selected, and select the new unselected button
-        //        if !sender.isSelected, selectedButtons.count == 3, !cardsMatch{
-        //            deselectSelectedButtons()
-        //            selectedButtons.removeAll()
-        //            selectedButtons.append(sender)
-        //            sender.isSelected = true
-        //            sender.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-        //        }
+    @objc func touchCard(_ sender: UITapGestureRecognizer) {
+        
+        var cardsMatch = false
+
+        let yourTag = sender.view!.tag // this is the tag of your gesture's object
+        // do whatever you want from here :) e.g. if you have an array of buttons instead of just 1:
+        for card in cardViewsOnScreen {
+            if(card.tag == yourTag) {
+                //select and deselect button
+                if selectedCards.count < 3 {
+                    //if the button is not selected, select the button
+                    if card.isSelected == false {
+                        card.isSelected = true
+                        card.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+                        selectedCards.append(card)
+                    }
+                        //if the button is selected, deselect the button
+                    else {
+                        card.isSelected = false
+                        card.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                        selectedCards.removeLast()
+                    }
+                }
+                //when the number of buttons in the array is equal to 3, check if cards match
+                if selectedCards.count == 3{
+                    var cardsFromModel = [Card]()
+                    for index in 0..<selectedCards.count {
+                        let nextCard = selectedCards[index]
+                        cardsFromModel.append(game.cards[nextCard.tag - 1])
+                    }
+                    cardsMatch = game.isSelectionASet(cardsSelected: cardsFromModel)
+                }
+                //if cards do match, then remove the cards from view
+                if cardsMatch {
+                    deselectSelectedButtons()
+                    for index in 0..<selectedCards.count {
+                        let nextCard = selectedCards[index]
+                        nextCard.removeFromSuperview()
+                    }
+                    selectedCards.removeAll()
+                }
+                
+                //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
+                //previously selected, and select the new unselected button
+                if !card.isSelected, selectedCards.count == 3, !cardsMatch{
+                    deselectSelectedButtons()
+                    selectedCards.removeAll()
+                    selectedCards.append(card)
+                    card.isSelected = true
+                    card.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+                }
+
+                redrawCardViews()
+
+            }
+        }
     }
     
     
@@ -368,9 +378,9 @@ class ViewController: UIViewController {
     //    }
     //a reusable function to deselect the selected buttons
     private func deselectSelectedButtons(){
-        for index in 0..<selectedButtons.count {
-            selectedButtons[index].isSelected = false
-            selectedButtons[index].layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        for index in 0..<selectedCards.count {
+            selectedCards[index].isSelected = false
+            selectedCards[index].layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         }
     }
     
@@ -395,8 +405,9 @@ class ViewController: UIViewController {
     }
     
     private func addGestureRecognizerToCardViews(card: CardView) {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(addThreeMoreCards(_:)))
-//        tap.delegate = self // This is not required
+        let tap = UITapGestureRecognizer(target: self, action: #selector(touchCard(_:)))
+        card.superview?.addGestureRecognizer(tap)
+        tap.delegate = self // This is not required
         card.addGestureRecognizer(tap)
     }
     
