@@ -59,7 +59,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         for index in 0..<game.cards.count {
             let card = game.cards[index]
-            print("index: \(index) shape:\(card.shape) number: \(card.numberOfShapes) id: \(card.identifier) shapeColor: \(card.shapeColor)")
+            print("index: \(index) shape:\(card.shape) number: \(card.numberOfShapes) id: \(card.identifier) shapeColor: \(card.shapeColor) shading: \(card.shading)")
         }
         print(game.cards.count)
         
@@ -304,11 +304,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         var tempShapeColor = Card.Color.all, tempShape = Card.Shapes.all, tempNumberOfShapes = Card.NumberOfShapes.all, tempShading = Card.Shading.all
         var colorCounter = 0, shapeCounter = 0 , numberOfShapesCounter = 0, shadingCounter = 0
         
-        for index in 0..<game.cards.count {
+        for index in 0..<maxCardCount {
             
             if  (index > 1 && index % 9 == 0){
-                shadingCounter += 1
                 shapeCounter += 1
+            }
+            if  (index > 1 && index % 27 == 0){
+                shadingCounter += 1
             }
             if index > 1, index % 3 == 0 {
                 colorCounter += 1
