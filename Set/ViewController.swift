@@ -182,11 +182,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             if index < initialCardCount {
                 cardViewsOnScreen.append(card)
                 viewForAllCards.addSubview(card)
+                
             }
             else {
                 allCardViewsAvailableAndNotOnScreen.append(card)
             }
             addGestureRecognizerToCardViews(card: card)
+            
         }
         
     }
@@ -194,7 +196,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @objc func touchCard(_ sender: UITapGestureRecognizer) {
         
         var cardsMatch = false
-
+        
         let yourTag = sender.view!.tag // this is the tag of your gesture's object
         // do whatever you want from here :) e.g. if you have an array of buttons instead of just 1:
         for card in cardViewsOnScreen {
@@ -229,8 +231,17 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     for index in 0..<selectedCards.count {
                         let nextCard = selectedCards[index]
                         nextCard.removeFromSuperview()
+                        
+                        //remove the cards that are selected from the array that holds the cards that are on screen
+                        let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
+                        cardViewsOnScreen = filterArray
                     }
                     selectedCards.removeAll()
+                    if numberOfRows >= 1 {
+                        reformCards()
+                        redrawCardViews()
+                    }
+                    
                 }
                 
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
@@ -242,9 +253,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     card.isSelected = true
                     card.layer.borderColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
                 }
-
-                redrawCardViews()
-
+                
+                print("x: \(card.frame.minX), y: \(card.frame.minX)")
             }
         }
     }
@@ -411,6 +421,17 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         card.addGestureRecognizer(tap)
     }
     
+    private func reformCards(){
+        numberOfRows -= 1
+        grid = Grid(layout: Grid.Layout.dimensions(rowCount: numberOfRows, columnCount: numberOfCardsPerRow))
+        
+        grid.frame = CGRect(
+            x: viewForAllCards.bounds.minX,
+            y: viewForAllCards.bounds.minY,
+            width: viewForAllCards.bounds.width,
+            height: viewForAllCards.bounds.height)
+        
+    }
     //get the NSAttributed String for the card
     //    private func getNSAttributedString(cardAt index: Int ) -> NSAttributedString {
     //        let card = game.cards[index]
