@@ -186,6 +186,7 @@ class ViewController: UIViewController {
             else {
                 allCardViewsAvailableAndNotOnScreen.append(card)
             }
+            addGestureRecognizerToCardViews(card: card)
         }
         
     }
@@ -391,6 +392,12 @@ class ViewController: UIViewController {
             cardViewsOnScreen[index].setNeedsDisplay()
             cardViewsOnScreen[index].setNeedsLayout()
         }
+    }
+    
+    private func addGestureRecognizerToCardViews(card: CardView) {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(addThreeMoreCards(_:)))
+//        tap.delegate = self // This is not required
+        card.addGestureRecognizer(tap)
     }
     
     //get the NSAttributed String for the card
