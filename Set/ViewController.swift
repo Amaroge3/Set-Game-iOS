@@ -134,8 +134,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         for index in 0..<maxCardCount {
             
             
-            var cardFromModel = game.cards[index]
-            var card = CardView()
+            let cardFromModel = game.cards[index]
+            let card = CardView()
             if index < initialCardCount {
                 //            card = CardView(frame: CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height))
                 card.frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
@@ -332,7 +332,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             //grab three cards and add them to screen
             for _ in 1...3 {
-                var currentCardCount = cardViewsOnScreen.count
+                let currentCardCount = cardViewsOnScreen.count
                                 //remove card from the array that contains cards not on screen yet
                 let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
                 
