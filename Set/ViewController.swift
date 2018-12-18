@@ -32,12 +32,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var initialCardCount = 12
     //maximum number of cards in the game
     var maxCardCount = 81
-    //button size
+    //card views not on screen
+    var allCardViewsAvailableAndNotOnScreen = [CardView]()
+    //card views on screen
+    var cardViewsOnScreen = [CardView]()
     //selected buttons array
     lazy var selectedCards = [CardView]()
-    var allCardViewsAvailableAndNotOnScreen = [CardView]()
-    var cardViewsOnScreen = [CardView]()
-    
     var numberOfRows = 4
     let numberOfCardsPerRow = 3
     
@@ -77,7 +77,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             let cardFromModel = game.cards[index]
             let card = CardView()
             if index < initialCardCount {
-                //            card = CardView(frame: CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height))
                 card.frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
             }
             
@@ -177,7 +176,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         redrawCardViews()
                     }
                 }
-                
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
                 if !card.isSelected, selectedCards.count == 3, !cardsMatch{
@@ -266,8 +264,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             y: viewForAllCards.bounds.minY,
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
-        
-        
     }
     
     private func redrawCardViews() {
