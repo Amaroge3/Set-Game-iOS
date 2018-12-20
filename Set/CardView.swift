@@ -9,7 +9,7 @@
 import UIKit
 
 class CardView: UIView {
-
+    
     //the shape of each card
     public var shape: Card.Shapes? = nil
     //color of card
@@ -19,6 +19,7 @@ class CardView: UIView {
     //alpha value of each card
     var shadingAlpha: CGFloat = 0.0
     var isSelected = false
+    var isFaceUp = false { didSet { setNeedsDisplay(); setNeedsLayout() }}
     
     
     static var identifierFactory = 0
@@ -27,11 +28,11 @@ class CardView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-
+    
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-
+        
     }
     
     //creates an id value for CardView
@@ -39,93 +40,108 @@ class CardView: UIView {
         identifierFactory += 1
         return CardView.identifierFactory
     }
-  
+    
     override func draw(_ rect: CGRect) {
         
-        //variable for the shape that's to be drawn
-        var path: UIBezierPath? = nil
-        
-        //the 'x' position of the Oval shape
-        var xPositionOfOval = bounds.size.width / 2,
+        if isFaceUp {
+            self.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            self.backgroundColor?.setFill()
+            UIGraphicsGetCurrentContext()?.fill(rect)
+            //variable for the shape that's to be drawn
+            var path: UIBezierPath? = nil
+            
+            //the 'x' position of the Oval shape
+            var xPositionOfOval = bounds.size.width / 2,
             ovalSize = bounds.size.height * 0.30 //size of Oval. the size of oval changes as more than one is added
-        
-        //start positions of 'x' and 'y' of the Diamond shape to be drawn
-        var diamondStartX = centerOffsetX,
+            
+            
+            ovalSize =  bounds.size.height > bounds.size.width ? bounds.size.width * 0.30 : bounds.size.height * 0.30
+            
+            //start positions of 'x' and 'y' of the Diamond shape to be drawn
+            var diamondStartX = centerOffsetX,
             diamondStartY = quarterOffsetY,
             lineLengthOfDiamond:CGFloat = bounds.size.width * 0.125 //length of the lines of the Diamond
-        
-        //squiggle Start and End points
-        var squiggleStartPoints = CGPoint(x: thirdOffsetX, y: quarterOffsetY),
+            
+            //squiggle Start and End points
+            var squiggleStartPoints = CGPoint(x: thirdOffsetX, y: quarterOffsetY),
             squiggleEndPoints = CGPoint(x: thirdOffsetX + quarterOffsetX, y: quarterOffsetY * 3),
             controlPointLength: CGFloat = 75 //squiggle control point length
-
-        let shapeSpacing: CGFloat = bounds.size.width * 0.33
-        
-        //if number of shapes is 2 or three, move the 'x' positions to the left to make room for the other shapes to draw
-        if numberOfShapes == 2 {
-            xPositionOfOval = thirdOffsetX
-            ovalSize /= 2
             
-            diamondStartX = thirdOffsetX
+            let shapeSpacing: CGFloat = bounds.size.width * 0.33
             
-            squiggleStartPoints.x = quarterOffsetX
-            squiggleEndPoints.x = squiggleStartPoints.x + quarterOffsetX
-        }
-        else if numberOfShapes == 3 {
-            xPositionOfOval = xPositionOfOval / 3
-            ovalSize *= 0.50 //change the oval shape to half the size
-            
-            diamondStartX = thirdOffsetX / 2
-            
-            squiggleStartPoints.x = thirdOffsetX / 6
-            squiggleEndPoints.x = squiggleStartPoints.x + quarterOffsetX
-        }
-        
-        //draw the shape up to the numberOfShapes, either 1, 2, or 3 shapes.
-        for _ in 1...numberOfShapes {
-            switch shape {
-            case .Squiggle?:
-                let controlPoint1 = CGPoint(x: squiggleStartPoints.x + controlPointLength, y: quarterOffsetY)
-                let controlPoint2 = CGPoint(x: squiggleEndPoints.x - controlPointLength, y: quarterOffsetY * 3)
+            //if number of shapes is 2 or three, move the 'x' positions to the left to make room for the other shapes to draw
+            if numberOfShapes == 2 {
+                xPositionOfOval = thirdOffsetX
+                ovalSize /= 2
                 
-                path = UIBezierPath()
-                path?.move(to: squiggleStartPoints)
-                path?.addCurve(to: squiggleEndPoints, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
-                path?.close()
+                diamondStartX = thirdOffsetX
                 
-                squiggleStartPoints.x += shapeSpacing
-                squiggleEndPoints.x += shapeSpacing
-                break
-            case .Diamond?:
-                path = UIBezierPath()
-                path?.move(to: CGPoint(x: diamondStartX, y: diamondStartY))
-                path?.addLine(to: (CGPoint(x: diamondStartX - lineLengthOfDiamond, y: diamondStartY * 2))) // /
-                path?.addLine(to: CGPoint(x: diamondStartX, y: diamondStartY * 3)) // \
-                path?.addLine(to: CGPoint(x: diamondStartX + lineLengthOfDiamond , y: diamondStartY * 2)) // \
-                path?.addLine(to: CGPoint(x: diamondStartX, y: diamondStartY)) // /
-                path?.close()
+                squiggleStartPoints.x = quarterOffsetX
+                squiggleEndPoints.x = squiggleStartPoints.x + quarterOffsetX
+            }
+            else if numberOfShapes == 3 {
+                xPositionOfOval = xPositionOfOval / 3
+                ovalSize *= 0.50 //change the oval shape to half the size
                 
-                diamondStartX += shapeSpacing
-                break
-            case .Oval?:
-                path = UIBezierPath(arcCenter: CGPoint(x: xPositionOfOval, y: centerOffsetY), radius: ovalSize, startAngle: 0, endAngle: 2*CGFloat.pi, clockwise: true)
+                diamondStartX = thirdOffsetX / 2
                 
-                xPositionOfOval += shapeSpacing
-                break
-            default:
-                break
+                squiggleStartPoints.x = thirdOffsetX / 6
+                squiggleEndPoints.x = squiggleStartPoints.x + quarterOffsetX
             }
             
-            //set color
-            color?.setFill()
-            color?.setStroke()
-            
-            //fill the shape with alpha value of 0, .5, or 1
-            path?.fill(with: .normal, alpha: shadingAlpha)
-            
-            //stroke shape
-            path?.stroke()
+            //draw the shape up to the numberOfShapes, either 1, 2, or 3 shapes.
+            for _ in 1...numberOfShapes {
+                switch shape {
+                case .Squiggle?:
+                    let controlPoint1 = CGPoint(x: squiggleStartPoints.x + controlPointLength, y: quarterOffsetY)
+                    let controlPoint2 = CGPoint(x: squiggleEndPoints.x - controlPointLength, y: quarterOffsetY * 3)
+                    
+                    path = UIBezierPath()
+                    path?.move(to: squiggleStartPoints)
+                    path?.addCurve(to: squiggleEndPoints, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+                    path?.close()
+                    
+                    squiggleStartPoints.x += shapeSpacing
+                    squiggleEndPoints.x += shapeSpacing
+                    break
+                case .Diamond?:
+                    path = UIBezierPath()
+                    path?.move(to: CGPoint(x: diamondStartX, y: diamondStartY))
+                    path?.addLine(to: (CGPoint(x: diamondStartX - lineLengthOfDiamond, y: diamondStartY * 2))) // /
+                    path?.addLine(to: CGPoint(x: diamondStartX, y: diamondStartY * 3)) // \
+                    path?.addLine(to: CGPoint(x: diamondStartX + lineLengthOfDiamond , y: diamondStartY * 2)) // \
+                    path?.addLine(to: CGPoint(x: diamondStartX, y: diamondStartY)) // /
+                    path?.close()
+                    
+                    diamondStartX += shapeSpacing
+                    break
+                case .Oval?:
+                    path = UIBezierPath(arcCenter: CGPoint(x: xPositionOfOval, y: centerOffsetY), radius: ovalSize, startAngle: 0, endAngle: 2*CGFloat.pi, clockwise: true)
+                    
+                    xPositionOfOval += shapeSpacing
+                    break
+                default:
+                    break
+                }
+                
+                //set color
+                color?.setFill()
+                color?.setStroke()
+                
+                //fill the shape with alpha value of 0, .5, or 1
+                path?.fill(with: .normal, alpha: shadingAlpha)
+                
+                //stroke shape
+                path?.stroke()
+            }
         }
+        else {
+            
+            self.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
+            self.backgroundColor?.setFill()
+            UIGraphicsGetCurrentContext()?.fill(rect)
+        }
+        
     }
     public func setColor(color: UIColor){
         self.color = color
