@@ -21,10 +21,6 @@ class CardView: UIView {
     var isSelected = false
     var isFaceUp = false { didSet { setNeedsDisplay(); setNeedsLayout() }}
     
-    
-    static var identifierFactory = 0
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -35,11 +31,6 @@ class CardView: UIView {
         
     }
     
-    //creates an id value for CardView
-    static func createUniqueIdentifier() -> Int {
-        identifierFactory += 1
-        return CardView.identifierFactory
-    }
     
     override func draw(_ rect: CGRect) {
         
@@ -137,7 +128,7 @@ class CardView: UIView {
         }
         else {
             
-            self.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
+            self.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
             self.backgroundColor?.setFill()
             UIGraphicsGetCurrentContext()?.fill(rect)
         }
