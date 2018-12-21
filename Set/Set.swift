@@ -20,7 +20,6 @@ class Set {
             let card = Card()
             cards.append(card)
         }
-//        shuffle()
         
     }
     
