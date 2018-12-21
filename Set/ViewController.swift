@@ -44,10 +44,16 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLayoutSubviews() {
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
+        
+        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setGameCards()
+//        game.shuffle()
+        loadCardViews()
+
         
         for index in 0..<game.cards.count {
             let card = game.cards[index]
@@ -55,9 +61,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
         print(game.cards.count)
         
+        
     }
     override func viewDidAppear(_ animated: Bool) {
-        loadCardViews()
+//
+//        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {Timer in
+//            for cardView in self.cardViewsOnScreen {
+//                //            cardView.isFaceUp = true
+//
+//                UIView.transition(with: cardView, duration: 0.5,
+//                                  options: [.transitionFlipFromLeft],
+//                                  animations:{ cardView.isFaceUp = !cardView.isFaceUp },
+//                                  completion: nil)
+//            }
+//        })
     }
     
     
@@ -111,7 +128,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             card.layer.cornerRadius = 5
             card.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             card.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            card.tag = CardView.createUniqueIdentifier()
+            card.tag = game.cards[index].identifier
             
             if index < initialCardCount {
                 cardViewsOnScreen.append(card)
@@ -121,9 +138,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             else {
                 allCardViewsAvailableAndNotOnScreen.append(card)
             }
-            addGestureRecognizerToCardViews(card: card)
+            
+            if card.isFaceUp { addGestureRecognizerToCardViews(card: card) }
             
         }
+        
+   
         
     }
     //when the user touches a card on the UI
@@ -227,15 +247,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             numberOfRows += 1
             //update the grid to add more cards to the screen
             updateGridForMoreCardsToBeAddedOnScreen()
-            
+
             //grab three cards and add them to screen
             for _ in 1...3 {
                 let currentCardCount = cardViewsOnScreen.count
                                 //remove card from the array that contains cards not on screen yet
                 let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
-                
+
                 card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-                
+
                 cardViewsOnScreen.append(card)
                 viewForAllCards.addSubview(card)
             }
