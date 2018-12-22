@@ -213,8 +213,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                                     self.selectedCards.removeAll()
                                     if self.numberOfRows >= 1 {
                                         self.reformCards()
-                                        
-                                        if self.numberOfRows != 0 { self.redrawCardViews() }
+                                        self.redrawCardViews()
                                     }
                                     
                             })
@@ -222,7 +221,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                             
                             
                     })
-                    
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
