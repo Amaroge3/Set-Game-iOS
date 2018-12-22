@@ -41,6 +41,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var numberOfRows = 4
     let numberOfCardsPerRow = 3
     
+    
+    lazy var animation = Animations()
+
     override func viewDidLayoutSubviews() {
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
@@ -64,17 +67,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-//
-//        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {Timer in
-//            for cardView in self.cardViewsOnScreen {
-//                //            cardView.isFaceUp = true
-//
-//                UIView.transition(with: cardView, duration: 0.5,
-//                                  options: [.transitionFlipFromLeft],
-//                                  animations:{ cardView.isFaceUp = !cardView.isFaceUp },
-//                                  completion: nil)
-//            }
-//        })
+        animation.flipCardsAndAnimate(cards: cardViewsOnScreen)
     }
     
     
@@ -139,7 +132,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 allCardViewsAvailableAndNotOnScreen.append(card)
             }
             
-            if card.isFaceUp { addGestureRecognizerToCardViews(card: card) }
+           addGestureRecognizerToCardViews(card: card)
             
         }
         
@@ -184,17 +177,52 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     deselectSelectedButtons()
                     for index in 0..<selectedCards.count {
                         let nextCard = selectedCards[index]
-                        nextCard.removeFromSuperview()
                         
                         //remove the cards that are selected from the array that holds the cards that are on screen
                         let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
                         cardViewsOnScreen = filterArray
                     }
-                    selectedCards.removeAll()
-                    if numberOfRows >= 1 {
-                        reformCards()
-                        redrawCardViews()
-                    }
+                    
+                    UIViewPropertyAnimator.runningPropertyAnimator(
+                        withDuration: 0.5,
+                        delay: 0,
+                        options: [],
+                        animations: {
+
+                            self.selectedCards.forEach{
+//                                $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
+                                $0.frame = CGRect(x: self.viewForAllCards.bounds.midX - $0.frame.width * 0.5, y: self.viewForAllCards.bounds.maxY,
+                                                  width: $0.frame.width, height: $0.frame.height  )
+                            }
+                    },
+                        completion: {position in
+                            UIViewPropertyAnimator.runningPropertyAnimator(
+                                withDuration: 0.5,
+                                delay: 0,
+                                options: [],
+                                animations: {
+                                    self.selectedCards.forEach{
+                                        $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                                        $0.alpha = 0
+                                    }
+                            },
+                                completion: { finished in
+                                    self.selectedCards.forEach{
+                                        $0.removeFromSuperview()
+                                    }
+                                    self.selectedCards.removeAll()
+                                    if self.numberOfRows >= 1 {
+                                        self.reformCards()
+                                        
+                                        if self.numberOfRows != 0 { self.redrawCardViews() }
+                                    }
+                                    
+                            })
+                            
+                            
+                            
+                    })
+                    
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
@@ -241,13 +269,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     //adds three more cards to the UI with the Add Three More cards button
     @IBAction func addThreeMoreCards(_ sender: UIButton) {
-        
         if allCardViewsAvailableAndNotOnScreen.count >= 3 {
             //increase the number of rows for the grid
             numberOfRows += 1
             //update the grid to add more cards to the screen
             updateGridForMoreCardsToBeAddedOnScreen()
-
+            
+            var cardsToBeAddedOnScreen = [CardView]()
             //grab three cards and add them to screen
             for _ in 1...3 {
                 let currentCardCount = cardViewsOnScreen.count
@@ -255,10 +283,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
 
                 card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-
+                cardsToBeAddedOnScreen.append(card)
+                
                 cardViewsOnScreen.append(card)
-                viewForAllCards.addSubview(card)
             }
+            animation.flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
+            for card in cardsToBeAddedOnScreen {
+            viewForAllCards.addSubview(card)
+            }
+
         }
         else {
             sender.isEnabled = false
@@ -302,9 +335,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     private func reformCards(){
-        numberOfRows -= 1
-        grid = Grid(layout: Grid.Layout.dimensions(rowCount: numberOfRows, columnCount: numberOfCardsPerRow))
         
+        numberOfRows -= 1
+        if numberOfRows != 0 {
+            grid = Grid(layout: Grid.Layout.dimensions(rowCount: numberOfRows, columnCount: numberOfCardsPerRow))
+        }
         grid.frame = CGRect(
             x: viewForAllCards.bounds.minX,
             y: viewForAllCards.bounds.minY,
