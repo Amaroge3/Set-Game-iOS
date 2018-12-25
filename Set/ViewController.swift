@@ -46,11 +46,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     lazy var animation = Animations()
 
     override func viewDidLayoutSubviews() {
-        
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
-        
-        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +69,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         animation.flipCardsAndAnimate(cards: cardViewsOnScreen)
     }
     
-    
+    //loads the CardViews and adds them into the UI. The CardViews are also stored inside of arrays for reference to them.
     func loadCardViews() {
         
         grid = Grid(layout: Grid.Layout.dimensions(rowCount: numberOfRows, columnCount: numberOfCardsPerRow))
@@ -184,7 +181,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
                         cardViewsOnScreen = filterArray
                     }
-                    
+
                     UIViewPropertyAnimator.runningPropertyAnimator(
                         withDuration: 0.5,
                         delay: 0,
@@ -270,7 +267,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-   
+   //add three more cards function. This function adds more cards when the user clicks on the
+    //UIView 'deck'
     @IBAction func addThreeMoreCardsFromDeck(_ sender: UITapGestureRecognizer) {
         
         animateDeckViewWhenClicked(gesture: sender)
@@ -335,7 +333,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
     }
-    
+    //redraws the card views that are on the UI
     private func redrawCardViews() {
         for index in 0..<cardViewsOnScreen.count{
             cardViewsOnScreen[index].frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
@@ -343,7 +341,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             cardViewsOnScreen[index].setNeedsLayout()
         }
     }
-    
+    //add a gesture recognizer to the UI card views
     private func addGestureRecognizerToCardViews(card: CardView) {
         let tap = UITapGestureRecognizer(target: self, action: #selector(touchCard(_:)))
         card.superview?.addGestureRecognizer(tap)
@@ -351,6 +349,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         card.addGestureRecognizer(tap)
     }
     
+    //reforms the cards when the user has no more cards available and has more matches. This function decreases
+    //the number of rows and reforms the card views.
     private func reformCards(){
         
         numberOfRows -= 1
@@ -363,7 +363,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
     }
-    
+    //This function animates the deck view when it is clicked when the user wants to add three more cards to the view
     private func animateDeckViewWhenClicked(gesture: UIGestureRecognizer) {
         if let deckView = gesture.view {
             let currentColor = gesture.view?.backgroundColor
