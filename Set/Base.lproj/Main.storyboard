@@ -22,22 +22,27 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M8q-tf-avE">
-                                <rect key="frame" x="309" y="552" width="45" height="100"/>
+                                <rect key="frame" x="165" y="552" width="45" height="100"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 More Cards" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DbN-92-1OB">
                                         <rect key="frame" x="0.0" y="0.0" width="45" height="100"/>
+                                        <gestureRecognizers/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.49327188729999999" blue="0.47399842739999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="DbN-92-1OB" firstAttribute="leading" secondItem="M8q-tf-avE" secondAttribute="leading" id="4gd-c1-cfi"/>
                                     <constraint firstAttribute="trailing" secondItem="DbN-92-1OB" secondAttribute="trailing" id="EJN-4E-6Tb"/>
                                     <constraint firstAttribute="bottom" secondItem="DbN-92-1OB" secondAttribute="bottom" id="GgC-67-NWb"/>
                                     <constraint firstItem="DbN-92-1OB" firstAttribute="top" secondItem="M8q-tf-avE" secondAttribute="top" id="mE5-qg-9vI"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="M9N-bV-ZKH" appends="YES" id="WBe-Mm-cWd"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -47,9 +52,9 @@
                             <constraint firstItem="mGf-92-int" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="GjQ-eP-D5N"/>
                             <constraint firstItem="mGf-92-int" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Onm-Ty-IZv"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mGf-92-int" secondAttribute="trailing" constant="16" id="Uz4-yQ-H3e"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="M8q-tf-avE" secondAttribute="trailing" constant="21" id="j2F-md-R3i"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="M8q-tf-avE" secondAttribute="trailing" constant="165" id="j2F-md-R3i"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="M8q-tf-avE" secondAttribute="bottom" constant="15" id="trl-wG-KFu"/>
-                            <constraint firstItem="M8q-tf-avE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="309" id="uxb-bg-5Xa"/>
+                            <constraint firstItem="M8q-tf-avE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="165" id="uxb-bg-5Xa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -59,6 +64,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="M9N-bV-ZKH">
+                    <connections>
+                        <action selector="addThreeMoreCardsFromDeck:" destination="BYZ-38-t0r" id="o1n-KJ-AeI"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
         </scene>
