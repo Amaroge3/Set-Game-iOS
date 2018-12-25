@@ -9,17 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
-    
-    @IBOutlet weak var addThreeCardsButton: UIButton! {
-        didSet {
-            addThreeCardsButton.layer.cornerRadius = 5
-            addThreeCardsButton.setNeedsDisplay()
-            addThreeCardsButton.setNeedsLayout()
+
+    @IBOutlet weak var deck: UIView! {
+        didSet { deck.layer.cornerRadius = 10
+                deck.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+            
         }
     }
+    
+    
     //view that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
-        { didSet { viewForAllCards.layer.cornerRadius = 5 } }
+        { didSet { viewForAllCards.layer.cornerRadius = 10 } }
     
     
     var grid = Grid(layout: Grid.Layout.dimensions(rowCount: 1, columnCount: 1))
@@ -45,6 +46,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     lazy var animation = Animations()
 
     override func viewDidLayoutSubviews() {
+        
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
         
@@ -191,6 +193,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
 
                             self.selectedCards.forEach{
 //                                $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
+                                $0.isFaceUp = false
                                 $0.frame = CGRect(x: self.viewForAllCards.bounds.midX - $0.frame.width * 0.5, y: self.viewForAllCards.bounds.maxY,
                                                   width: $0.frame.width, height: $0.frame.height  )
                             }
@@ -265,39 +268,55 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             numberOfShapesCounter += 1
         }
     }
-    //adds three more cards to the UI with the Add Three More cards button
-    @IBAction func addThreeMoreCards(_ sender: UIButton) {
-        if allCardViewsAvailableAndNotOnScreen.count >= 3 {
-            //increase the number of rows for the grid
-            numberOfRows += 1
-            //update the grid to add more cards to the screen
-            updateGridForMoreCardsToBeAddedOnScreen()
-            
-            var cardsToBeAddedOnScreen = [CardView]()
-            //grab three cards and add them to screen
-            for _ in 1...3 {
-                let currentCardCount = cardViewsOnScreen.count
-                                //remove card from the array that contains cards not on screen yet
-                let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
-
-                card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-                cardsToBeAddedOnScreen.append(card)
+    
+    
+   
+    @IBAction func addThreeMoreCardsFromDeck(_ sender: UITapGestureRecognizer) {
+        
+        animateDeckViewWhenClicked(gesture: sender)
+        
+        switch sender.state{
+        case .ended:
+            if allCardViewsAvailableAndNotOnScreen.count >= 3 {
+                //increase the number of rows for the grid
+                numberOfRows += 1
+                //update the grid to add more cards to the screen
+                updateGridForMoreCardsToBeAddedOnScreen()
                 
-                cardViewsOnScreen.append(card)
+                var cardsToBeAddedOnScreen = [CardView]()
+                //grab three cards and add them to screen
+                for _ in 1...3 {
+                    let currentCardCount = cardViewsOnScreen.count
+                    //remove card from the array that contains cards not on screen yet
+                    let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
+                    
+                    card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
+                    cardsToBeAddedOnScreen.append(card)
+                    
+                    cardViewsOnScreen.append(card)
+                }
+                animation.flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
+                for card in cardsToBeAddedOnScreen {
+                    viewForAllCards.addSubview(card)
+                }
+                
             }
-            animation.flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
-            for card in cardsToBeAddedOnScreen {
-            viewForAllCards.addSubview(card)
+            else {
+                if let view = sender.view {
+                    view.isUserInteractionEnabled = false
+                    view.alpha = 0.10
+                    print(view.alpha)
+                    
+                }
             }
-
+            //redraw all the subviews on the screen because the frame of the views has changed
+            redrawCardViews()
+            break
+        default: break
         }
-        else {
-            sender.isEnabled = false
-            sender.alpha = 0.10
-        }
-        //redraw all the subviews on the screen because the frame of the views has changed
-        redrawCardViews()
+        
     }
+   
     
     //a reusable function to deselect the selected buttons
     private func deselectSelectedButtons(){
@@ -343,5 +362,16 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             y: viewForAllCards.bounds.minY,
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
+    }
+    
+    private func animateDeckViewWhenClicked(gesture: UIGestureRecognizer) {
+        if let deckView = gesture.view {
+            let currentColor = gesture.view?.backgroundColor
+            UIView.animate(withDuration: 0.10, animations: {
+                gesture.view?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            }, completion: { finished in
+                gesture.view?.backgroundColor = currentColor
+            })
+        }
     }
 }
