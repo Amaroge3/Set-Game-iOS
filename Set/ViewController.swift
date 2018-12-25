@@ -43,7 +43,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     let numberOfCardsPerRow = 3
     
     
-    lazy var animation = Animations()
 
     override func viewDidLayoutSubviews() {
         updateGridForMoreCardsToBeAddedOnScreen()
@@ -66,7 +65,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-        animation.flipCardsAndAnimate(cards: cardViewsOnScreen)
+        flipCardsAndAnimate(cards: cardViewsOnScreen)
     }
     
     //loads the CardViews and adds them into the UI. The CardViews are also stored inside of arrays for reference to them.
@@ -293,7 +292,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     
                     cardViewsOnScreen.append(card)
                 }
-                animation.flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
+                flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
                 for card in cardsToBeAddedOnScreen {
                     viewForAllCards.addSubview(card)
                 }
@@ -362,6 +361,19 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             y: viewForAllCards.bounds.minY,
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
+    }
+    func flipCardsAndAnimate(cards: [CardView]){
+        
+        Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {Timer in
+            for cardView in cards {
+                //            cardView.isFaceUp = true
+                
+                UIView.transition(with: cardView, duration: 0.5,
+                                  options: [.transitionFlipFromLeft],
+                                  animations:{ cardView.isFaceUp = !cardView.isFaceUp },
+                                  completion: nil)
+            }
+        })
     }
     //This function animates the deck view when it is clicked when the user wants to add three more cards to the view
     private func animateDeckViewWhenClicked(gesture: UIGestureRecognizer) {
