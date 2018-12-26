@@ -9,24 +9,20 @@
 import UIKit
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
-
+    
     @IBOutlet weak var deck: UIView! {
         didSet { deck.layer.cornerRadius = 10
-                deck.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
-            
+            deck.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
         }
     }
-    
     
     //view that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
         { didSet { viewForAllCards.layer.cornerRadius = 10 } }
     
-    
     var grid = Grid(layout: Grid.Layout.dimensions(rowCount: 1, columnCount: 1))
-    {
-        didSet { viewForAllCards.setNeedsLayout();viewForAllCards.setNeedsDisplay() }
-    }
+    { didSet { viewForAllCards.setNeedsLayout(); viewForAllCards.setNeedsDisplay() } }
+    
     //initializes the set class with the maximum number of cards in the game of set with maxCardButtonCount
     lazy var game = Set(numberOfCards: maxCardCount)
     //initial number of buttons in the UI
@@ -43,27 +39,25 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     let numberOfCardsPerRow = 3
     
     
-
     override func viewDidLayoutSubviews() {
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setGameCards()
-//        game.shuffle()
+        //        game.shuffle()
         loadCardViews()
-
+        
         
         for index in 0..<game.cards.count {
             let card = game.cards[index]
             print("index: \(index) shape:\(card.shape) number: \(card.numberOfShapes) id: \(card.identifier) shapeColor: \(card.shapeColor) shading: \(card.shading)")
         }
         print(game.cards.count)
-        
-        
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         flipCardsAndAnimate(cards: cardViewsOnScreen)
     }
@@ -80,7 +74,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             height: viewForAllCards.bounds.height)
         
         for index in 0..<maxCardCount {
-            
             
             let cardFromModel = game.cards[index]
             let card = CardView()
@@ -124,19 +117,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             if index < initialCardCount {
                 cardViewsOnScreen.append(card)
                 viewForAllCards.addSubview(card)
-                
             }
             else {
                 allCardViewsAvailableAndNotOnScreen.append(card)
             }
             
-           addGestureRecognizerToCardViews(card: card)
-            
+            addGestureRecognizerToCardViews(card: card)
         }
-        
-   
-        
     }
+    
     //when the user touches a card on the UI
     @objc func touchCard(_ sender: UITapGestureRecognizer) {
         
@@ -180,15 +169,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
                         cardViewsOnScreen = filterArray
                     }
-
                     UIViewPropertyAnimator.runningPropertyAnimator(
                         withDuration: 0.5,
                         delay: 0,
                         options: [],
                         animations: {
-
+                            
                             self.selectedCards.forEach{
-//                                $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
+                                //                                $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
                                 $0.isFaceUp = false
                                 $0.frame = CGRect(x: self.viewForAllCards.bounds.midX - $0.frame.width * 0.5, y: self.viewForAllCards.bounds.maxY,
                                                   width: $0.frame.width, height: $0.frame.height  )
@@ -214,11 +202,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                                         self.reformCards()
                                         self.redrawCardViews()
                                     }
-                                    
                             })
-                            
-                            
-                            
                     })
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
@@ -266,7 +250,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-   //add three more cards function. This function adds more cards when the user clicks on the
+    //add three more cards function. This function adds more cards when the user clicks on the
     //UIView 'deck'
     @IBAction func addThreeMoreCardsFromDeck(_ sender: UITapGestureRecognizer) {
         
@@ -292,10 +276,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     
                     cardViewsOnScreen.append(card)
                 }
-                flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
-                for card in cardsToBeAddedOnScreen {
-                    viewForAllCards.addSubview(card)
-                }
+                //                flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
+                
+                newCardsAnimateAndAddToUI(cards: cardsToBeAddedOnScreen)
+                //                for card in cardsToBeAddedOnScreen {
+                //                    viewForAllCards.addSubview(card)
+                //                }
                 
             }
             else {
@@ -307,13 +293,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
             //redraw all the subviews on the screen because the frame of the views has changed
-            redrawCardViews()
+            //            redrawCardViews()
             break
         default: break
         }
-        
     }
-   
     
     //a reusable function to deselect the selected buttons
     private func deselectSelectedButtons(){
@@ -332,6 +316,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
     }
+    
     //redraws the card views that are on the UI
     private func redrawCardViews() {
         for index in 0..<cardViewsOnScreen.count{
@@ -340,6 +325,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             cardViewsOnScreen[index].setNeedsLayout()
         }
     }
+    
     //add a gesture recognizer to the UI card views
     private func addGestureRecognizerToCardViews(card: CardView) {
         let tap = UITapGestureRecognizer(target: self, action: #selector(touchCard(_:)))
@@ -362,6 +348,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             width: viewForAllCards.bounds.width,
             height: viewForAllCards.bounds.height)
     }
+    
     func flipCardsAndAnimate(cards: [CardView]){
         
         Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {Timer in
@@ -378,12 +365,41 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     //This function animates the deck view when it is clicked when the user wants to add three more cards to the view
     private func animateDeckViewWhenClicked(gesture: UIGestureRecognizer) {
         if let deckView = gesture.view {
-            let currentColor = gesture.view?.backgroundColor
+            let currentColor = deckView.backgroundColor
             UIView.animate(withDuration: 0.10, animations: {
-                gesture.view?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                deckView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             }, completion: { finished in
-                gesture.view?.backgroundColor = currentColor
+                deckView.backgroundColor = currentColor
             })
         }
+    }
+    //adds an animation to when the user clicks on the 3 new cards deck. The animation shows 3 new cards coming
+    //out of the deck and placed on the screen.
+    private func newCardsAnimateAndAddToUI(cards: [CardView]){
+        var frameOfCards = [CGRect]()
+        deck.layoutIfNeeded()
+        for cardView in cards {
+            let deckBoundsInsideSuperview = deck.convert(CGPoint(x: deck.bounds.minX, y: deck.bounds.minY), to: viewForAllCards)
+            frameOfCards.append(cardView.frame)
+            cardView.frame = CGRect(x: deckBoundsInsideSuperview.x, y: deckBoundsInsideSuperview.y,
+                                    width: deck!.frame.size.width, height: deck!.frame.size.height)
+        }
+        UIViewPropertyAnimator.runningPropertyAnimator(
+            withDuration: 0.5,
+            delay: 0,
+            options: [],
+            animations: { [unowned self] in
+                
+                for cardView in cards {
+                    cardView.isFaceUp = true
+                    self.viewForAllCards.addSubview(cardView)
+                }
+                for index in 0..<cards.count {
+                    cards[index].frame = frameOfCards[index]
+                }
+                self.redrawCardViews()
+                
+            },
+            completion:nil)
     }
 }
