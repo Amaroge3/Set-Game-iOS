@@ -16,6 +16,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    
     //view that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
         { didSet { viewForAllCards.layer.cornerRadius = 10 } }
