@@ -18,7 +18,9 @@ class CardView: UIView {
     var numberOfShapes = 0
     //alpha value of each card
     var shadingAlpha: CGFloat = 0.0
+    //whether the card view is selected or not by the user
     var isSelected = false
+    //whether the card is face up
     var isFaceUp = false { didSet { setNeedsDisplay(); setNeedsLayout() }}
     
 
@@ -32,7 +34,7 @@ class CardView: UIView {
         
     }
     
-    
+    //draw method for the card view class. Draws the card and each shape is brought in by the controller from the model.
     override func draw(_ rect: CGRect) {
         
         if isFaceUp {
@@ -128,16 +130,16 @@ class CardView: UIView {
             }
         }
         else {
-            
+            //if the card is not face up, the background color is set and no content is shown
             self.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
             self.backgroundColor?.setFill()
             UIGraphicsGetCurrentContext()?.fill(rect)
         }
         
     }
-    public func setColor(color: UIColor){
-        self.color = color
-    }
+    
+    
+
     
 }
 extension CardView {
