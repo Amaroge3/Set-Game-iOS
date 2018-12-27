@@ -39,6 +39,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     let numberOfCardsPerRow = 3
     
     
+//    lazy var animator = UIDynamicAnimator(referenceView: viewForAllCards)
+    
     override func viewDidLayoutSubviews() {
         updateGridForMoreCardsToBeAddedOnScreen()
         redrawCardViews()
@@ -82,7 +84,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             
             card.shape = cardFromModel.shape
-            card.setColor(color: game.cards[index].shapeColor)
+            card.color = game.cards[index].shapeColor
             
             switch cardFromModel.numberOfShapes {
                 
