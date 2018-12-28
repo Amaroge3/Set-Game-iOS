@@ -98,7 +98,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
             
             card.shape = cardFromModel.shape
-            card.color = game.cards[index].shapeColor
+            card.color = cardFromModel.shapeColor
             card.numberOfShapes = cardNumberOfShapes[cardFromModel.numberOfShapes]!
             card.shadingAlpha = cardShadings[cardFromModel.shading]!
             card.layer.borderWidth = 2
@@ -234,12 +234,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     
                     cardViewsOnScreen.append(card)
                 }
-                //                flipCardsAndAnimate(cards: cardsToBeAddedOnScreen)
-                
                 newCardsAnimateAndAddToUI(cards: cardsToBeAddedOnScreen)
-                //                for card in cardsToBeAddedOnScreen {
-                //                    viewForAllCards.addSubview(card)
-                //                }
                 
             }
             else {
@@ -293,8 +288,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     //reforms the cards when the user has no more cards available and has more matches. This function decreases
-    //the number of rows and reforms the card views.
-    private func reformCards(){
+    private func reduceNumberOfRowsAndReformCardViews(){
         
         numberOfRows -= 1
         if numberOfRows != 0 {
@@ -355,7 +349,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             },
             completion:nil)
     }
-    
+    //this function animates and removes the cards from the view when cards are matched
     private func animateCardViewsWhenMatched(){
         UIViewPropertyAnimator.runningPropertyAnimator(
             withDuration: 0.5,
@@ -389,7 +383,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         }
                         self.selectedCards.removeAll()
                         if self.numberOfRows >= 1 {
-                            self.reformCards()
+                            self.reduceNumberOfRowsAndReformCardViews()
                             self.redrawCardViews()
                             
                         }
