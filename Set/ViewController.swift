@@ -16,13 +16,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    
     //view that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
         { didSet { viewForAllCards.layer.cornerRadius = 10 } }
     
     var grid = Grid(layout: Grid.Layout.dimensions(rowCount: 1, columnCount: 1))
-    { didSet { viewForAllCards.setNeedsLayout(); viewForAllCards.setNeedsDisplay() } }
     
     //initializes the set class with the maximum number of cards in the game of set with maxCardButtonCount
     lazy var game = Set(numberOfCards: maxCardCount)
@@ -40,11 +38,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     let numberOfCardsPerRow = 3
     
     
-//    lazy var animator = UIDynamicAnimator(referenceView: viewForAllCards)
+    //    lazy var animator = UIDynamicAnimator(referenceView: viewForAllCards)
     
     override func viewDidLayoutSubviews() {
-        updateGridForMoreCardsToBeAddedOnScreen()
-        redrawCardViews()
+        //        updateGridForMoreCardsToBeAddedOnScreen()
+        //        redrawCardViews()
     }
     
     override func viewDidLoad() {
@@ -63,6 +61,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         flipCardsAndAnimate(cards: cardViewsOnScreen)
+        updateGridForMoreCardsToBeAddedOnScreen()
+        redrawCardViews()
     }
     
     //loads the CardViews and adds them into the UI. The CardViews are also stored inside of arrays for reference to them.
@@ -172,41 +172,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
                         cardViewsOnScreen = filterArray
                     }
-                    UIViewPropertyAnimator.runningPropertyAnimator(
-                        withDuration: 0.5,
-                        delay: 0,
-                        options: [],
-                        animations: {
-                            
-                            self.selectedCards.forEach{
-                                //                                $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
-                                $0.isFaceUp = false
-                                $0.frame = CGRect(x: self.viewForAllCards.bounds.midX - $0.frame.width * 0.5, y: self.viewForAllCards.bounds.maxY,
-                                                  width: $0.frame.width, height: $0.frame.height  )
-                            }
-                    },
-                        completion: {position in
-                            UIViewPropertyAnimator.runningPropertyAnimator(
-                                withDuration: 0.5,
-                                delay: 0,
-                                options: [],
-                                animations: {
-                                    self.selectedCards.forEach{
-                                        $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
-                                        $0.alpha = 0
-                                    }
-                            },
-                                completion: { finished in
-                                    self.selectedCards.forEach{
-                                        $0.removeFromSuperview()
-                                    }
-                                    self.selectedCards.removeAll()
-                                    if self.numberOfRows >= 1 {
-                                        self.reformCards()
-                                        self.redrawCardViews()
-                                    }
-                            })
-                    })
+                    animateCardViewsWhenMatched()
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
@@ -246,7 +212,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             game.cards[index].numberOfShapes = tempNumberOfShapes[numberOfShapesCounter]
             game.cards[index].shapeColor = tempShapeColor[colorCounter].rawValue
             game.cards[index].shading = tempShading[shadingCounter]
-            
             //change number on every card
             numberOfShapesCounter += 1
         }
@@ -356,12 +321,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {Timer in
             for cardView in cards {
-                //            cardView.isFaceUp = true
                 
-                UIView.transition(with: cardView, duration: 0.5,
-                                  options: [.transitionFlipFromLeft],
-                                  animations:{ cardView.isFaceUp = !cardView.isFaceUp },
-                                  completion: nil)
+                UIView.transition(with: cardView, duration: 0.5, options: [.transitionFlipFromLeft],
+                                  animations:{ cardView.isFaceUp = !cardView.isFaceUp }, completion: nil)
             }
         })
     }
@@ -369,10 +331,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     private func animateDeckViewWhenClicked(gesture: UIGestureRecognizer) {
         if let deckView = gesture.view {
             let currentColor = deckView.backgroundColor
-            UIView.animate(withDuration: 0.10, animations: {
-                deckView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            }, completion: { finished in
-                deckView.backgroundColor = currentColor
+            UIView.animate(withDuration: 0.10, animations: { deckView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) },
+                           completion: { finished in deckView.backgroundColor = currentColor
             })
         }
     }
@@ -405,4 +365,44 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             },
             completion:nil)
     }
+    
+    private func animateCardViewsWhenMatched(){
+        UIViewPropertyAnimator.runningPropertyAnimator(
+            withDuration: 0.5,
+            delay: 0,
+            options: [],
+            animations: {
+                
+                self.selectedCards.forEach{
+                    // $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
+                    $0.isFaceUp = false
+                    $0.frame = CGRect(x: self.viewForAllCards.bounds.midX - $0.frame.width * 0.5, y: self.viewForAllCards.bounds.maxY,
+                                      width: $0.frame.width, height: $0.frame.height  )
+                }
+        },
+            completion: {position in
+                UIViewPropertyAnimator.runningPropertyAnimator(
+                    withDuration: 0.5,
+                    delay: 0,
+                    options: [],
+                    animations: {
+                        self.selectedCards.forEach{
+                            $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
+                            $0.alpha = 0
+                        }
+                },
+                    completion: { finished in
+                        self.selectedCards.forEach{
+                            $0.removeFromSuperview()
+                        }
+                        self.selectedCards.removeAll()
+                        if self.numberOfRows >= 1 {
+                            self.reformCards()
+                            self.redrawCardViews()
+                            
+                        }
+                })
+        })
+    }
+    
 }
