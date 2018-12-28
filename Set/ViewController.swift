@@ -363,11 +363,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             options: [],
             animations: {
                 
-                self.selectedCards.forEach{
+                self.selectedCards.forEach{ [unowned self] in
+                    let discardPileBoundsInsideSuperview = self.discardPileView.convert(CGPoint(x: self.discardPileView.bounds.minX, y: self.discardPileView.bounds.minY), to: self.viewForAllCards)
                     // $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
                     $0.isFaceUp = false
-                    $0.frame = CGRect(x: self.viewForAllCards.bounds.midX - $0.frame.width * 0.5, y: self.viewForAllCards.bounds.maxY,
-                                      width: $0.frame.width, height: $0.frame.height  )
+                    $0.layer.cornerRadius = self.discardPileView.layer.cornerRadius
+                    $0.frame = CGRect(x: discardPileBoundsInsideSuperview.x, y: discardPileBoundsInsideSuperview.y,
+                                      width: self.discardPileView.frame.width, height: self.discardPileView.frame.height)
                 }
         },
             completion: {position in
