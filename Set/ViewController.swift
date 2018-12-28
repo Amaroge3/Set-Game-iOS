@@ -15,6 +15,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             deck.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
         }
     }
+    @IBOutlet weak var discardPileView: UIView!{
+        didSet { discardPileView.layer.cornerRadius = 10
+            discardPileView.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+        }
+    }
     
     //view that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
@@ -39,6 +44,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     //    lazy var animator = UIDynamicAnimator(referenceView: viewForAllCards)
+    
+    lazy var cardShapes = [Card.Shapes: UIBezierPath]()
+    lazy var cardNumberOfShapes = [Card.NumberOfShapes.One : 1,
+                              .Two : 2,
+                              .Three: 3]
+    lazy var cardShadings: [Card.Shading : CGFloat] = [Card.Shading.Open: 0,
+                                .Striped : 0.5,
+                                .Solid : 1]
     
     override func viewDidLayoutSubviews() {
         //        updateGridForMoreCardsToBeAddedOnScreen()
@@ -86,31 +99,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             card.shape = cardFromModel.shape
             card.color = game.cards[index].shapeColor
-            
-            switch cardFromModel.numberOfShapes {
-                
-            case .One:
-                card.numberOfShapes = 1
-                break
-            case .Two:
-                card.numberOfShapes = 2
-                break
-            case .Three:
-                card.numberOfShapes = 3
-                break
-            }
-            switch cardFromModel.shading {
-                
-            case .Solid:
-                card.shadingAlpha = 1
-                break
-            case .Striped:
-                card.shadingAlpha = 0.5
-                break
-            case .Open:
-                card.shadingAlpha = 0
-                break
-            }
+            card.numberOfShapes = cardNumberOfShapes[cardFromModel.numberOfShapes]!
+            card.shadingAlpha = cardShadings[cardFromModel.shading]!
             card.layer.borderWidth = 2
             card.layer.cornerRadius = 5
             card.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
