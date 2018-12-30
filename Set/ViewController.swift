@@ -63,7 +63,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     lazy var cardNumberOfShapes = [Card.NumberOfShapes.One : 1,
                                    .Two : 2,
                                    .Three: 3]
-    lazy var cardShadings: [Card.Shading : CGFloat] = [Card.Shading.Open: 0,
+    lazy var cardShadings: [Card.Shading: CGFloat] = [Card.Shading.Open: 0,
                                                        .Striped : 0.5,
                                                        .Solid : 1]
     
@@ -78,13 +78,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         //        game.shuffle()
         loadCardViews()
         
-        
         for index in 0..<game.cards.count {
             let card = game.cards[index]
             print("index: \(index) shape:\(card.shape) number: \(card.numberOfShapes) id: \(card.identifier) shapeColor: \(card.shapeColor) shading: \(card.shading)")
         }
-        print(game.cards.count)
-        
         
     }
     
@@ -164,7 +161,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     }
                 }
                 //when the number of buttons in the array is equal to 3, check if cards match
-                if selectedCards.count == 3{
+                if selectedCards.count == 3 {
                     var cardsFromModel = [Card]()
                     for index in 0..<selectedCards.count {
                         let nextCard = selectedCards[index]
@@ -174,7 +171,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
                 //if cards do match, then remove the cards from view
                 if cardsMatch {
-//                    var cardsToAnimate = selectedCards
                     deselectSelectedButtons()
                     for index in 0..<selectedCards.count {
                         let nextCard = selectedCards[index]
@@ -183,16 +179,17 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
                         cardViewsOnScreen = filterArray
                     }
-                    self.animateCardViewsWhenMatched(cards: self.selectedCards)
-
-
                     if self.numberOfRows >= 1 {
                         self.reduceNumberOfRowsAndReformCardViews()
                         self.redrawCardViews()
-
+                        
                     }
+                    self.animateCardViewsWhenMatched(cards: selectedCards)
+                    
                     self.selectedCards.removeAll()
 
+                   
+                    
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
@@ -206,7 +203,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-    //set the game cards
+    //set the game cards for the model
     private func setGameCards(){
         
         var tempShapeColor = Card.Color.all, tempShape = Card.Shapes.all, tempNumberOfShapes = Card.NumberOfShapes.all, tempShading = Card.Shading.all
@@ -246,38 +243,37 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         switch sender.state{
         case .ended:
-        
-                        if allCardViewsAvailableAndNotOnScreen.count >= 3 {
-                            //increase the number of rows for the grid
-                            numberOfRows += 1
-                            //update the grid to add more cards to the screen
-                            updateGridForMoreCardsToBeAddedOnScreen()
             
-                            var cardsToBeAddedOnScreen = [CardView]()
-                            //grab three cards and add them to screen
-                            for _ in 1...3 {
-                                let currentCardCount = cardViewsOnScreen.count
-                                //remove card from the array that contains cards not on screen yet
-                                let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
-            
-                                card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-                                cardsToBeAddedOnScreen.append(card)
-            
-                                cardViewsOnScreen.append(card)
-                            }
-                            newCardsAnimateAndAddToUI(cards: cardsToBeAddedOnScreen)
-            
-                        }
-                        else {
-                            if let view = sender.view {
-                                view.isUserInteractionEnabled = false
-                                view.alpha = 0.10
-                                print(view.alpha)
-            
-                            }
-                        }
-//            redraw all the subviews on the screen because the frame of the views has changed
-                        redrawCardViews()
+            if allCardViewsAvailableAndNotOnScreen.count >= 3 {
+                //increase the number of rows for the grid
+                numberOfRows += 1
+                //update the grid to add more cards to the screen
+                updateGridForMoreCardsToBeAddedOnScreen()
+                
+                var cardsToBeAddedOnScreen = [CardView]()
+                //grab three cards and add them to screen
+                for _ in 1...3 {
+                    let currentCardCount = cardViewsOnScreen.count
+                    //remove card from the array that contains cards not on screen yet
+                    let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
+                    
+                    card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
+                    cardsToBeAddedOnScreen.append(card)
+                    
+                    cardViewsOnScreen.append(card)
+                }
+                newCardsAnimateAndAddToUI(cards: cardsToBeAddedOnScreen)
+                
+            }
+            else {
+                if let view = sender.view {
+                    view.isUserInteractionEnabled = false
+                    view.alpha = 0.10
+                    
+                }
+            }
+        //redraw all the subviews on the screen because the frame of the views has changed
+            redrawCardViews()
             break
         default: break
         }
@@ -336,7 +332,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {Timer in
             for cardView in cards {
-                
                 UIView.transition(with: cardView, duration: 0.5, options: [.transitionFlipFromLeft],
                                   animations:{ cardView.isFaceUp = !cardView.isFaceUp }, completion: nil)
             }
@@ -390,13 +385,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             cardView.frame.size.height = discardPileView.frame.height
             cardView.frame.size.width = discardPileView.frame.width
             cardView.layer.cornerRadius = discardPileView.layer.cornerRadius
-
             
+            
+            self.viewForAllCards.bringSubviewToFront(cardView)
             let push =  UIPushBehavior(items: [cardView], mode: .instantaneous)
             push.angle = (2*CGFloat.pi).arc4random
             push.magnitude = CGFloat(1.0) + CGFloat(2.0).arc4random
-            push.action = {[unowned push] in
-                
+            push.action = { [unowned push] in
                 push.dynamicAnimator?.removeBehavior(push)
             }
             self.animator.addBehavior(push)
@@ -409,25 +404,22 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             let snapBehavior = UISnapBehavior(item: cardView, snapTo: CGPoint(x: discardPileBoundsInsideSuperview.x + self.discardPileView.frame.width * 0.5, y: discardPileBoundsInsideSuperview.y + self.discardPileView.frame.height * 0.5))
             snapBehavior.damping = 2
-
+            
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { [unowned self] Timer in
-            cardView.isFaceUp = false
-
-            self.animator.addBehavior(snapBehavior)
-            snapBehavior.action = {
-                self.collisionBehavior.removeItem(cardView)
-                self.itemBehavior.removeItem(cardView)
-            }
-
+                cardView.isFaceUp = false
+                
+                self.animator.addBehavior(snapBehavior)
+                snapBehavior.action = {
+                    self.collisionBehavior.removeItem(cardView)
+                    self.itemBehavior.removeItem(cardView)
+                }
+                
             })
-
+            
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { Timer in
                 cardView.removeFromSuperview()
             })
-
         }
-        
-
     }
     
 }
