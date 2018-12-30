@@ -16,6 +16,7 @@
 		DB1AAFF62190F44E00255059 /* SetUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1AAFF52190F44E00255059 /* SetUITests.swift */; };
 		DB7367152191A79B00EF99B0 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7367142191A79B00EF99B0 /* Card.swift */; };
 		DB7367172191A9AF00EF99B0 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7367162191A9AF00EF99B0 /* Set.swift */; };
+		DB8DA96921D97A6F00AF6A17 /* CardBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8DA96821D97A6F00AF6A17 /* CardBehavior.swift */; };
 		DBEAA30C21B20CD8001EE2C8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEAA30B21B20CD8001EE2C8 /* CardView.swift */; };
 		DBEAA31021B20FEA001EE2C8 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEAA30F21B20FEA001EE2C8 /* Grid.swift */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		DB1AAFF72190F44E00255059 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB7367142191A79B00EF99B0 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		DB7367162191A9AF00EF99B0 /* Set.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
+		DB8DA96821D97A6F00AF6A17 /* CardBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBehavior.swift; sourceTree = "<group>"; };
 		DBEAA30B21B20CD8001EE2C8 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		DBEAA30F21B20FEA001EE2C8 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Grid.swift; path = ../../../Downloads/Grid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +113,7 @@
 				DB1AAFD72190F44C00255059 /* ViewController.swift */,
 				DBEAA30F21B20FEA001EE2C8 /* Grid.swift */,
 				DB1AAFD92190F44C00255059 /* Main.storyboard */,
+				DB8DA96821D97A6F00AF6A17 /* CardBehavior.swift */,
 				DBEAA30B21B20CD8001EE2C8 /* CardView.swift */,
 				DB1AAFDC2190F44E00255059 /* Assets.xcassets */,
 				DB1AAFDE2190F44E00255059 /* LaunchScreen.storyboard */,
@@ -122,8 +125,8 @@
 		DB1AAFE92190F44E00255059 /* SetTests */ = {
 			isa = PBXGroup;
 			children = (
-				DB1AAFEA2190F44E00255059 /* SetTests.swift */,
 				DB1AAFEC2190F44E00255059 /* Info.plist */,
+				DB1AAFEA2190F44E00255059 /* SetTests.swift */,
 			);
 			path = SetTests;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				DB1AAFD62190F44C00255059 /* AppDelegate.swift in Sources */,
 				DBEAA30C21B20CD8001EE2C8 /* CardView.swift in Sources */,
 				DBEAA31021B20FEA001EE2C8 /* Grid.swift in Sources */,
+				DB8DA96921D97A6F00AF6A17 /* CardBehavior.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
