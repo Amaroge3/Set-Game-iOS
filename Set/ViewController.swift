@@ -12,7 +12,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var deck: UIView! {
         didSet { deck.layer.cornerRadius = 10
-            deck.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+            deck.layer.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
         }
     }
     @IBOutlet weak var discardPileView: UIView!{
