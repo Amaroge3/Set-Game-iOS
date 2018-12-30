@@ -42,16 +42,30 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var numberOfRows = 4
     let numberOfCardsPerRow = 3
     
+    //dynamic animator
+    lazy var animator = UIDynamicAnimator(referenceView: self.view)
     
-    //    lazy var animator = UIDynamicAnimator(referenceView: viewForAllCards)
+    lazy var collisionBehavior: UICollisionBehavior = {
+        let behavior = UICollisionBehavior()
+        behavior.translatesReferenceBoundsIntoBoundary = true
+        return behavior
+    }()
+    
+    lazy var itemBehavior:UIDynamicItemBehavior = {
+        let behavior = UIDynamicItemBehavior()
+        behavior.allowsRotation = false
+        behavior.elasticity = 1.5
+        behavior.resistance = 0.5
+        return behavior
+    }()
     
     lazy var cardShapes = [Card.Shapes: UIBezierPath]()
     lazy var cardNumberOfShapes = [Card.NumberOfShapes.One : 1,
-                              .Two : 2,
-                              .Three: 3]
+                                   .Two : 2,
+                                   .Three: 3]
     lazy var cardShadings: [Card.Shading : CGFloat] = [Card.Shading.Open: 0,
-                                .Striped : 0.5,
-                                .Solid : 1]
+                                                       .Striped : 0.5,
+                                                       .Solid : 1]
     
     override func viewDidLayoutSubviews() {
         //        updateGridForMoreCardsToBeAddedOnScreen()
@@ -70,12 +84,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             print("index: \(index) shape:\(card.shape) number: \(card.numberOfShapes) id: \(card.identifier) shapeColor: \(card.shapeColor) shading: \(card.shading)")
         }
         print(game.cards.count)
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         flipCardsAndAnimate(cards: cardViewsOnScreen)
+        
         updateGridForMoreCardsToBeAddedOnScreen()
+        
+        
         redrawCardViews()
+        
     }
     
     //loads the CardViews and adds them into the UI. The CardViews are also stored inside of arrays for reference to them.
@@ -154,6 +174,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                 }
                 //if cards do match, then remove the cards from view
                 if cardsMatch {
+//                    var cardsToAnimate = selectedCards
                     deselectSelectedButtons()
                     for index in 0..<selectedCards.count {
                         let nextCard = selectedCards[index]
@@ -162,7 +183,16 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                         let filterArray = cardViewsOnScreen.filter { !$0.contains(nextCard) }
                         cardViewsOnScreen = filterArray
                     }
-                    animateCardViewsWhenMatched()
+                    self.animateCardViewsWhenMatched(cards: self.selectedCards)
+
+
+                    if self.numberOfRows >= 1 {
+                        self.reduceNumberOfRowsAndReformCardViews()
+                        self.redrawCardViews()
+
+                    }
+                    self.selectedCards.removeAll()
+
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
@@ -216,37 +246,38 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         switch sender.state{
         case .ended:
-            if allCardViewsAvailableAndNotOnScreen.count >= 3 {
-                //increase the number of rows for the grid
-                numberOfRows += 1
-                //update the grid to add more cards to the screen
-                updateGridForMoreCardsToBeAddedOnScreen()
-                
-                var cardsToBeAddedOnScreen = [CardView]()
-                //grab three cards and add them to screen
-                for _ in 1...3 {
-                    let currentCardCount = cardViewsOnScreen.count
-                    //remove card from the array that contains cards not on screen yet
-                    let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
-                    
-                    card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
-                    cardsToBeAddedOnScreen.append(card)
-                    
-                    cardViewsOnScreen.append(card)
-                }
-                newCardsAnimateAndAddToUI(cards: cardsToBeAddedOnScreen)
-                
-            }
-            else {
-                if let view = sender.view {
-                    view.isUserInteractionEnabled = false
-                    view.alpha = 0.10
-                    print(view.alpha)
-                    
-                }
-            }
-            //redraw all the subviews on the screen because the frame of the views has changed
-            //            redrawCardViews()
+        
+                        if allCardViewsAvailableAndNotOnScreen.count >= 3 {
+                            //increase the number of rows for the grid
+                            numberOfRows += 1
+                            //update the grid to add more cards to the screen
+                            updateGridForMoreCardsToBeAddedOnScreen()
+            
+                            var cardsToBeAddedOnScreen = [CardView]()
+                            //grab three cards and add them to screen
+                            for _ in 1...3 {
+                                let currentCardCount = cardViewsOnScreen.count
+                                //remove card from the array that contains cards not on screen yet
+                                let card = allCardViewsAvailableAndNotOnScreen.removeFirst()
+            
+                                card.frame = CGRect(x: (grid[currentCardCount]?.minX)!, y: (grid[currentCardCount]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
+                                cardsToBeAddedOnScreen.append(card)
+            
+                                cardViewsOnScreen.append(card)
+                            }
+                            newCardsAnimateAndAddToUI(cards: cardsToBeAddedOnScreen)
+            
+                        }
+                        else {
+                            if let view = sender.view {
+                                view.isUserInteractionEnabled = false
+                                view.alpha = 0.10
+                                print(view.alpha)
+            
+                            }
+                        }
+//            redraw all the subviews on the screen because the frame of the views has changed
+                        redrawCardViews()
             break
         default: break
         }
@@ -350,45 +381,53 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             completion:nil)
     }
     //this function animates and removes the cards from the view when cards are matched
-    private func animateCardViewsWhenMatched(){
-        UIViewPropertyAnimator.runningPropertyAnimator(
-            withDuration: 0.5,
-            delay: 0,
-            options: [],
-            animations: {
+    private func animateCardViewsWhenMatched(cards: [CardView]){
+        
+        
+        let discardPileBoundsInsideSuperview = self.discardPileView.convert(CGPoint(x: self.discardPileView.bounds.minX, y: self.discardPileView.bounds.minY), to: self.view)
+        
+        for cardView in cards {
+            cardView.frame.size.height = discardPileView.frame.height
+            cardView.frame.size.width = discardPileView.frame.width
+            cardView.layer.cornerRadius = discardPileView.layer.cornerRadius
+
+            
+            let push =  UIPushBehavior(items: [cardView], mode: .instantaneous)
+            push.angle = (2*CGFloat.pi).arc4random
+            push.magnitude = CGFloat(1.0) + CGFloat(2.0).arc4random
+            push.action = {[unowned push] in
                 
-                self.selectedCards.forEach{ [unowned self] in
-                    let discardPileBoundsInsideSuperview = self.discardPileView.convert(CGPoint(x: self.discardPileView.bounds.minX, y: self.discardPileView.bounds.minY), to: self.viewForAllCards)
-                    // $0.transform = CGAffineTransform.identity.scaledBy(x: 1.5, y: 1.5)
-                    $0.isFaceUp = false
-                    $0.layer.cornerRadius = self.discardPileView.layer.cornerRadius
-                    $0.frame = CGRect(x: discardPileBoundsInsideSuperview.x, y: discardPileBoundsInsideSuperview.y,
-                                      width: self.discardPileView.frame.width, height: self.discardPileView.frame.height)
-                }
-        },
-            completion: {position in
-                UIViewPropertyAnimator.runningPropertyAnimator(
-                    withDuration: 0.5,
-                    delay: 0,
-                    options: [],
-                    animations: {
-                        self.selectedCards.forEach{
-                            $0.transform = CGAffineTransform.identity.scaledBy(x: 0.1, y: 0.1)
-                            $0.alpha = 0
-                        }
-                },
-                    completion: { finished in
-                        self.selectedCards.forEach{
-                            $0.removeFromSuperview()
-                        }
-                        self.selectedCards.removeAll()
-                        if self.numberOfRows >= 1 {
-                            self.reduceNumberOfRowsAndReformCardViews()
-                            self.redrawCardViews()
-                            
-                        }
-                })
-        })
+                push.dynamicAnimator?.removeBehavior(push)
+            }
+            self.animator.addBehavior(push)
+            
+            animator.addBehavior(self.collisionBehavior)
+            animator.addBehavior(self.itemBehavior)
+            collisionBehavior.addItem(cardView)
+            itemBehavior.addItem(cardView)
+            push.addItem(cardView)
+            
+            let snapBehavior = UISnapBehavior(item: cardView, snapTo: CGPoint(x: discardPileBoundsInsideSuperview.x + self.discardPileView.frame.width * 0.5, y: discardPileBoundsInsideSuperview.y + self.discardPileView.frame.height * 0.5))
+            snapBehavior.damping = 2
+
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { [unowned self] Timer in
+            cardView.isFaceUp = false
+
+            self.animator.addBehavior(snapBehavior)
+            snapBehavior.action = {
+                self.collisionBehavior.removeItem(cardView)
+                self.itemBehavior.removeItem(cardView)
+            }
+
+            })
+
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { Timer in
+                cardView.removeFromSuperview()
+            })
+
+        }
+        
+
     }
     
 }
