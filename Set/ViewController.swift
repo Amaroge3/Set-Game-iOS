@@ -45,19 +45,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     //dynamic animator
     lazy var animator = UIDynamicAnimator(referenceView: self.view)
     
-    lazy var collisionBehavior: UICollisionBehavior = {
-        let behavior = UICollisionBehavior()
-        behavior.translatesReferenceBoundsIntoBoundary = true
-        return behavior
-    }()
-    
-    lazy var itemBehavior:UIDynamicItemBehavior = {
-        let behavior = UIDynamicItemBehavior()
-        behavior.allowsRotation = false
-        behavior.elasticity = 1.5
-        behavior.resistance = 0.5
-        return behavior
-    }()
+   
     
     lazy var cardShapes = [Card.Shapes: UIBezierPath]()
     lazy var cardNumberOfShapes = [Card.NumberOfShapes.One : 1,
@@ -379,42 +367,27 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     private func animateCardViewsWhenMatched(cards: [CardView]){
         
         
-        let discardPileBoundsInsideSuperview = self.discardPileView.convert(CGPoint(x: self.discardPileView.bounds.minX, y: self.discardPileView.bounds.minY), to: self.view)
+        let discardPileBoundsInsideSuperview = self.discardPileView.convert(CGPoint(
+            x: self.discardPileView.bounds.minX + discardPileView.frame.size.width * 0.5,
+            y: self.discardPileView.bounds.minY + discardPileView.frame.size.height * 0.5),
+            to: self.view)
         
+
         for cardView in cards {
             cardView.frame.size.height = discardPileView.frame.height
             cardView.frame.size.width = discardPileView.frame.width
             cardView.layer.cornerRadius = discardPileView.layer.cornerRadius
-            
-            
             self.viewForAllCards.bringSubviewToFront(cardView)
-            let push =  UIPushBehavior(items: [cardView], mode: .instantaneous)
-            push.angle = (2*CGFloat.pi).arc4random
-            push.magnitude = CGFloat(1.0) + CGFloat(2.0).arc4random
-            push.action = { [unowned push] in
-                push.dynamicAnimator?.removeBehavior(push)
-            }
-            self.animator.addBehavior(push)
             
-            animator.addBehavior(self.collisionBehavior)
-            animator.addBehavior(self.itemBehavior)
-            collisionBehavior.addItem(cardView)
-            itemBehavior.addItem(cardView)
-            push.addItem(cardView)
+            let animation = CardBehavior(in: animator)
             
-            let snapBehavior = UISnapBehavior(item: cardView, snapTo: CGPoint(x: discardPileBoundsInsideSuperview.x + self.discardPileView.frame.width * 0.5, y: discardPileBoundsInsideSuperview.y + self.discardPileView.frame.height * 0.5))
-            snapBehavior.damping = 2
-            
-            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { [unowned self] Timer in
-                cardView.isFaceUp = false
-                
-                self.animator.addBehavior(snapBehavior)
-                snapBehavior.action = {
-                    self.collisionBehavior.removeItem(cardView)
-                    self.itemBehavior.removeItem(cardView)
-                }
-                
-            })
+            animation.addItem(cardView)
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { Timer in
+
+            cardView.isFaceUp = false
+            animation.addItem(cardView, to: discardPileBoundsInsideSuperview)
+                })
+
             
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { Timer in
                 cardView.removeFromSuperview()
