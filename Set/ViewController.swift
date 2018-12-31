@@ -21,6 +21,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    @IBOutlet weak var newGameButton: UIButton!{
+        didSet { newGameButton.layer.cornerRadius = 10 }
+    }
     //view that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
         { didSet { viewForAllCards.layer.cornerRadius = 10 } }
@@ -45,15 +48,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     //dynamic animator
     lazy var animator = UIDynamicAnimator(referenceView: self.view)
     
-   
+    
     
     lazy var cardShapes = [Card.Shapes: UIBezierPath]()
     lazy var cardNumberOfShapes = [Card.NumberOfShapes.One : 1,
                                    .Two : 2,
                                    .Three: 3]
     lazy var cardShadings: [Card.Shading: CGFloat] = [Card.Shading.Open: 0,
-                                                       .Striped : 0.5,
-                                                       .Solid : 1]
+                                                      .Striped : 0.5,
+                                                      .Solid : 1]
     
     override func viewDidLayoutSubviews() {
         //        updateGridForMoreCardsToBeAddedOnScreen()
@@ -175,8 +178,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     self.animateCardViewsWhenMatched(cards: selectedCards)
                     
                     self.selectedCards.removeAll()
-
-                   
+                    
+                    
                     
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
@@ -260,7 +263,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     
                 }
             }
-        //redraw all the subviews on the screen because the frame of the views has changed
+            //redraw all the subviews on the screen because the frame of the views has changed
             redrawCardViews()
             break
         default: break
@@ -370,9 +373,9 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         let discardPileBoundsInsideSuperview = self.discardPileView.convert(CGPoint(
             x: self.discardPileView.bounds.minX + discardPileView.frame.size.width * 0.5,
             y: self.discardPileView.bounds.minY + discardPileView.frame.size.height * 0.5),
-            to: self.view)
+                                                                            to: self.view)
         
-
+        
         for cardView in cards {
             cardView.frame.size.height = discardPileView.frame.height
             cardView.frame.size.width = discardPileView.frame.width
@@ -383,16 +386,35 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             
             animation.addItem(cardView)
             Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { Timer in
-
-            cardView.isFaceUp = false
-            animation.addItem(cardView, to: discardPileBoundsInsideSuperview)
-                })
-
+                
+                cardView.isFaceUp = false
+                animation.addItem(cardView, to: discardPileBoundsInsideSuperview)
+            })
             
             Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { Timer in
                 cardView.removeFromSuperview()
             })
         }
     }
+    @IBAction func startNewGame(_ sender: UIButton) {
+        game = Set(numberOfCards: maxCardCount)
+        for card in cardViewsOnScreen {
+            card.removeFromSuperview()
+        }
+        cardViewsOnScreen.removeAll()
+        allCardViewsAvailableAndNotOnScreen.removeAll()
+        numberOfRows = 4
+        setGameCards()
+        game.shuffle()
+        loadCardViews()
+        flipCardsAndAnimate(cards: cardViewsOnScreen)
+        
+        updateGridForMoreCardsToBeAddedOnScreen()
+        
+        
+        redrawCardViews()
+        
+    }
+    
     
 }

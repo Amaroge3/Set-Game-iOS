@@ -44,8 +44,18 @@
                                     <outletCollection property="gestureRecognizers" destination="M9N-bV-ZKH" appends="YES" id="WBe-Mm-cWd"/>
                                 </connections>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zFs-AG-QWS">
+                                <rect key="frame" x="16" y="577" width="104" height="50"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="New Game">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="startNewGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pQY-Wj-4XO"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAR-Ya-s6r">
-                                <rect key="frame" x="314" y="562" width="45" height="80"/>
+                                <rect key="frame" x="218" y="562" width="45" height="80"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Discard Pile" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a6P-ea-Rbn" userLabel="Discard Pile">
                                         <rect key="frame" x="0.0" y="0.0" width="45" height="80"/>
@@ -68,10 +78,14 @@
                             <constraint firstItem="M8q-tf-avE" firstAttribute="top" secondItem="mGf-92-int" secondAttribute="bottom" constant="8" id="EOP-JC-Mef"/>
                             <constraint firstItem="mGf-92-int" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="GjQ-eP-D5N"/>
                             <constraint firstItem="mGf-92-int" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Onm-Ty-IZv"/>
+                            <constraint firstItem="zFs-AG-QWS" firstAttribute="top" secondItem="mGf-92-int" secondAttribute="bottom" constant="33" id="TIY-gi-Soo"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mGf-92-int" secondAttribute="trailing" constant="16" id="Uz4-yQ-H3e"/>
-                            <constraint firstItem="nAR-Ya-s6r" firstAttribute="leading" secondItem="DbN-92-1OB" secondAttribute="trailing" constant="104" id="Zkz-eL-vKy"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nAR-Ya-s6r" secondAttribute="trailing" constant="16" id="hz2-Jt-ul1"/>
+                            <constraint firstItem="DbN-92-1OB" firstAttribute="leading" secondItem="zFs-AG-QWS" secondAttribute="trailing" constant="45" id="YOt-iQ-0op"/>
+                            <constraint firstItem="nAR-Ya-s6r" firstAttribute="leading" secondItem="DbN-92-1OB" secondAttribute="trailing" constant="8" id="Zkz-eL-vKy"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nAR-Ya-s6r" secondAttribute="trailing" constant="112" id="hz2-Jt-ul1"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="zFs-AG-QWS" secondAttribute="bottom" constant="40" id="idB-nD-FW4"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="M8q-tf-avE" secondAttribute="trailing" constant="165" id="j2F-md-R3i"/>
+                            <constraint firstItem="zFs-AG-QWS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="n2G-OA-zu6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="M8q-tf-avE" secondAttribute="bottom" constant="15" id="trl-wG-KFu"/>
                             <constraint firstItem="M8q-tf-avE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="165" id="uxb-bg-5Xa"/>
                         </constraints>
@@ -80,6 +94,7 @@
                     <connections>
                         <outlet property="deck" destination="M8q-tf-avE" id="0X9-vf-czF"/>
                         <outlet property="discardPileView" destination="nAR-Ya-s6r" id="dyG-BO-ztR"/>
+                        <outlet property="newGameButton" destination="zFs-AG-QWS" id="T7r-qI-aya"/>
                         <outlet property="viewForAllCards" destination="mGf-92-int" id="Iaf-NE-ece"/>
                     </connections>
                 </viewController>
