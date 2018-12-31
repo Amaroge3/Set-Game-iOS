@@ -397,21 +397,21 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     @IBAction func startNewGame(_ sender: UIButton) {
-        game = Set(numberOfCards: maxCardCount)
+       game.resetCardsForNewGame()
+        self.game = Set(numberOfCards: maxCardCount)
         for card in cardViewsOnScreen {
             card.removeFromSuperview()
         }
-        cardViewsOnScreen.removeAll()
-        allCardViewsAvailableAndNotOnScreen.removeAll()
+        cardViewsOnScreen = [CardView]()
+        allCardViewsAvailableAndNotOnScreen = [CardView]()
+        
         numberOfRows = 4
         setGameCards()
-        game.shuffle()
+//        game.shuffle()
         loadCardViews()
         flipCardsAndAnimate(cards: cardViewsOnScreen)
         
         updateGridForMoreCardsToBeAddedOnScreen()
-        
-        
         redrawCardViews()
         
     }

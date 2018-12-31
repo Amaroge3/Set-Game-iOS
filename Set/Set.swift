@@ -22,7 +22,10 @@ class Set {
         }
         
     }
-    
+    public func resetCardsForNewGame(){
+        cards = []
+        Card.identifierFactory = 0
+    }
     //shuffle cards
     public func shuffle(){
         for index in 0..<cards.count {
