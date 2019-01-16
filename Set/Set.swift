@@ -60,7 +60,13 @@ class Set {
         }
         return true
     }
-    
+    public func removeCardFromModel(with identifier: Int) {
+        for index in 0..<cards.count {
+            if identifier == cards[index].identifier {
+                cards.remove(at: index)
+            }
+        }
+    }
     //get methods for different attributes of cards
     public func getColorOfCard(buttonTag tag: Int) -> UIColor {
         return cards[tag].shapeColor
