@@ -156,7 +156,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     var cardsFromModel = [Card]()
                     for index in 0..<selectedCards.count {
                         let nextCard = selectedCards[index]
-                        cardsFromModel.append(game.cards[nextCard.tag - 1])
+                        cardsFromModel.append(game.getCardFromModel(with: nextCard.tag))
                     }
                     cardsMatch = game.isSelectionASet(cardsSelected: cardsFromModel)
                 }
@@ -179,9 +179,11 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     
                     //removes all the cards that are matched from the model to keep the model in
                     //sync with the controller
-                    for cardView in selectedCards {
+                    
+                    for cardView in selectedCards{
                         game.removeCardFromModel(with: cardView.tag)
                     }
+                    
                     self.selectedCards.removeAll()
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons

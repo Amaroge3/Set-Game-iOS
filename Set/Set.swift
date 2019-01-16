@@ -60,10 +60,19 @@ class Set {
         }
         return true
     }
-    public func removeCardFromModel(with identifier: Int) {
-        for index in 0..<cards.count {
-            if identifier == cards[index].identifier {
-                cards.remove(at: index)
+    public func getCardFromModel(with tag: Int) -> Card{
+        var matchedCard: Card?
+        for card in cards {
+            if card.identifier == tag {
+                matchedCard = card
+            }
+        }
+        return matchedCard!
+    }
+    public func removeCardFromModel(with tag: Int) {
+        for card in cards {
+            if card.identifier == tag {
+                
             }
         }
     }
@@ -80,5 +89,12 @@ class Set {
     }
     public func getCardIdentifier(buttonTag index: Int) -> Int {
         return cards[index].identifier
+    }
+}
+extension Array {
+    mutating func remove(at indexes: [Int]) {
+        for index in indexes.sorted(by: >) {
+            remove(at: index)
+        }
     }
 }
