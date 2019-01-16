@@ -177,10 +177,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
                     }
                     self.animateCardViewsWhenMatched(cards: selectedCards)
                     
+                    //removes all the cards that are matched from the model to keep the model in
+                    //sync with the controller
+                    for cardView in selectedCards {
+                        game.removeCardFromModel(with: cardView.tag)
+                    }
                     self.selectedCards.removeAll()
-                    
-                    
-                    
                 }
                 //when 3 buttons are not matched and the user selects another button not selected previously, deselect and remove all buttons
                 //previously selected, and select the new unselected button
@@ -417,4 +419,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
+
+
 }

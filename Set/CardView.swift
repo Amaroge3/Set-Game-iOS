@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CardView: UIView {
+@IBDesignable class CardView: UIView {
     
     //the shape of each card
     public var shape: Card.Shapes? = nil
