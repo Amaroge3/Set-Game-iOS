@@ -7,24 +7,28 @@
 //
 
 import UIKit
-
-class ViewController: UIViewController, UIGestureRecognizerDelegate {
+class SetViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    
+    
+    //: [Outlets] (@next)
+    //: Outlet to Deck View in the StoryBoard
     @IBOutlet weak var deck: UIView! {
         didSet { deck.layer.cornerRadius = 10
             deck.layer.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
         }
     }
+    //: Outlet to Discard Pile View in the StoryBoard
     @IBOutlet weak var discardPileView: UIView!{
         didSet { discardPileView.layer.cornerRadius = 10
             discardPileView.layer.backgroundColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
         }
     }
-    
+    // New Game Button Outlet
     @IBOutlet weak var newGameButton: UIButton!{
         didSet { newGameButton.layer.cornerRadius = 10 }
     }
-    //view that holds cards
+    // View that holds cards
     @IBOutlet weak var viewForAllCards: UIView!
         { didSet { viewForAllCards.layer.cornerRadius = 10 } }
     
@@ -45,10 +49,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var numberOfRows = 4
     let numberOfCardsPerRow = 3
     
-    //dynamic animator
+    //:MARK - Dynamic Animator
     lazy var animator = UIDynamicAnimator(referenceView: self.view)
-    
-    
     
     lazy var cardShapes = [Card.Shapes: UIBezierPath]()
     lazy var cardNumberOfShapes = [Card.NumberOfShapes.One : 1,
@@ -78,15 +80,14 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         flipCardsAndAnimate(cards: cardViewsOnScreen)
-        
         updateGridForMoreCardsToBeAddedOnScreen()
-        
-        
         redrawCardViews()
-        
     }
     
-    //loads the CardViews and adds them into the UI. The CardViews are also stored inside of arrays for reference to them.
+    /**
+     ### Load Card Views
+     Loads the card views and adds them to the UI. The card views are stored inside two arrays as references.
+     */
     func loadCardViews() {
         
         grid = Grid(layout: Grid.Layout.dimensions(rowCount: numberOfRows, columnCount: numberOfCardsPerRow))
@@ -100,34 +101,40 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         for index in 0..<maxCardCount {
             
             let cardFromModel = game.cards[index]
-            let card = CardView()
+            let cardView = CardView()
             if index < initialCardCount {
-                card.frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
+                cardView.frame = CGRect(x: (grid[index]?.minX)!, y: (grid[index]?.minY)!, width: grid.cellSize.width, height: grid.cellSize.height)
             }
             
-            card.shape = cardFromModel.shape
-            card.color = cardFromModel.shapeColor
-            card.numberOfShapes = cardNumberOfShapes[cardFromModel.numberOfShapes]!
-            card.shadingAlpha = cardShadings[cardFromModel.shading]!
-            card.layer.borderWidth = 2
-            card.layer.cornerRadius = 5
-            card.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            card.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            card.tag = game.cards[index].identifier
+            cardView.shape = cardFromModel.shape
+            cardView.color = cardFromModel.shapeColor
+            cardView.numberOfShapes = cardNumberOfShapes[cardFromModel.numberOfShapes]!
+            cardView.shadingAlpha = cardShadings[cardFromModel.shading]!
+            cardView.layer.borderWidth = 2
+            cardView.layer.cornerRadius = 5
+            cardView.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            cardView.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            cardView.tag = game.cards[index].identifier
             
             if index < initialCardCount {
-                cardViewsOnScreen.append(card)
-                viewForAllCards.addSubview(card)
+                cardViewsOnScreen.append(cardView)
+                viewForAllCards.addSubview(cardView)
             }
             else {
-                allCardViewsAvailableAndNotOnScreen.append(card)
+                allCardViewsAvailableAndNotOnScreen.append(cardView)
             }
             
-            addGestureRecognizerToCardViews(card: card)
+            addGestureRecognizerToCardViews(card: cardView)
         }
     }
-    
-    //when the user touches a card on the UI
+    /**
+     ### Touch Card
+     Responds to the touching of the user on the card views in the UI. It changes the UI after the user presses on a card view.
+     It then checks to see whether the cards match by interacting with the Model 'Set'.
+     
+     - Parameters:
+        - sender: The gesture recognizer used to detect which view was Tapped.
+     */
     @objc func touchCard(_ sender: UITapGestureRecognizer) {
         
         var cardsMatch = false
@@ -198,7 +205,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-    //set the game cards for the model
+    /**
+     ### Set Game Cards
+     Sets the game cards in 'Set', which is the model of the game.
+     */
     private func setGameCards(){
         
         var tempShapeColor = Card.Color.all, tempShape = Card.Shapes.all, tempNumberOfShapes = Card.NumberOfShapes.all, tempShading = Card.Shading.all
@@ -229,9 +239,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    
-    //add three more cards function. This function adds more cards when the user clicks on the
-    //UIView 'deck'
+    /**
+     ### Add Three More Cards
+     
+     Adds three more cards to the UI from the 'Deck View' when the user clicks on the 'Deck View'.
+     - Parameters:
+        - sender: The tap gesture thats used to tap on the 'Deck View'.
+ */
     @IBAction func addThreeMoreCardsFromDeck(_ sender: UITapGestureRecognizer) {
         
         animateDeckViewWhenClicked(gesture: sender)
@@ -401,7 +415,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     @IBAction func startNewGame(_ sender: UIButton) {
-       game.resetCardsForNewGame()
+        game.resetCardsForNewGame()
         self.game = Set(numberOfCards: maxCardCount)
         for card in cardViewsOnScreen {
             card.removeFromSuperview()
@@ -411,16 +425,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         numberOfRows = 4
         setGameCards()
-//        game.shuffle()
+        //        game.shuffle()
         loadCardViews()
         flipCardsAndAnimate(cards: cardViewsOnScreen)
         
         updateGridForMoreCardsToBeAddedOnScreen()
-        redrawCardViews()
-        
+        redrawCardViews()        
     }
-    
-    
 
-
+}
+extension SetViewController {
+    
 }
